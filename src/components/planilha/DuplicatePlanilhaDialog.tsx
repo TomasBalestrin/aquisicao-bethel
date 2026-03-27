@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Modal } from "@/components/ui/Modal";
-import { duplicatePlanilha } from "@/actions/planilhas";
+import { duplicatePlanilha } from "@/actions/planilhasAdmin";
 
 interface Props {
   open: boolean;
