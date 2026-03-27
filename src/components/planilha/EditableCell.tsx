@@ -52,7 +52,7 @@ export function EditableCell({ entryId, field, value, isCurrency, isPercent, onU
     return (
       <div
         onClick={() => { setEditing(true); setTimeout(() => inputRef.current?.select(), 0); }}
-        className={`cursor-pointer px-2 py-1.5 font-mono text-[12px] tabular-nums ${saving ? "text-gold" : "text-navy-dark"}`}
+        className={`cursor-pointer px-2 py-1.5 font-sans text-[12px] tabular-nums ${saving ? "text-gold" : "text-navy-dark"}`}
       >
         {isCurrency ? `R$ ${displayVal}` : displayVal}
       </div>
@@ -67,7 +67,7 @@ export function EditableCell({ entryId, field, value, isCurrency, isPercent, onU
       onChange={(e) => handleChange(e.target.value)}
       onBlur={handleBlur}
       onKeyDown={(e) => { if (e.key === "Enter") handleBlur(); }}
-      className="w-full bg-gold-lightest px-2 py-1.5 font-mono text-[12px] tabular-nums text-navy-dark outline-none"
+      className="w-full bg-gold-lightest px-2 py-1.5 font-sans text-[12px] tabular-nums text-navy-dark outline-none"
     />
   );
 }

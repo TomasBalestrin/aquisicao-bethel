@@ -52,7 +52,7 @@
 
     /* === TIPOGRAFIA === */
     --font-primary: var(--font-poppins);
-    --font-mono: var(--font-jetbrains);
+    --font-mono: var(--font-poppins);
 
     /* === shadcn/ui tokens === */
     --background: 0 0% 100%;

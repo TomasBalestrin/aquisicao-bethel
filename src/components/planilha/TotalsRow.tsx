@@ -70,14 +70,14 @@ export function TotalsRow({ entries, columns }: Props) {
         const cellBg = gc?.cell ? "bg-gold-lightest" : "bg-gold-lightest";
         if (col.key === "data") {
           return (
-            <td key={col.key} className={`border-r border-gold-lighter ${cellBg} px-2 py-2 font-mono text-[12px] text-navy-dark`}>
+            <td key={col.key} className={`border-r border-gold-lighter ${cellBg} px-2 py-2 font-sans text-[12px] text-navy-dark`}>
               Total
             </td>
           );
         }
         const val = getTotal(entries, col.key);
         return (
-          <td key={col.key} className={`border-r border-gold-lighter ${cellBg} px-2 py-2 font-mono text-[12px] tabular-nums text-navy-dark ${dynColor(col.key, val)}`}>
+          <td key={col.key} className={`border-r border-gold-lighter ${cellBg} px-2 py-2 font-sans text-[12px] tabular-nums text-navy-dark ${dynColor(col.key, val)}`}>
             {fmtTotal(val, col)}
           </td>
         );

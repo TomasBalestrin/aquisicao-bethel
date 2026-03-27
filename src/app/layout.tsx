@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
-import { cn } from "@/lib/utils";
 import "./globals.css";
 
 const poppins = localFont({
@@ -17,13 +16,6 @@ const poppins = localFont({
   display: "swap",
 });
 
-const jetbrainsMono = localFont({
-  src: "./fonts/jetbrains-mono-latin-wght-normal.woff2",
-  variable: "--font-jetbrains",
-  display: "swap",
-  weight: "400 500",
-});
-
 export const metadata: Metadata = {
   title: "PerpetuoHQ",
   description: "Sistema de gestão de perpétuos para tráfego pago",
@@ -35,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={cn(poppins.variable, jetbrainsMono.variable)}>
+    <html lang="pt-BR" className={poppins.variable}>
       <body className="font-sans antialiased">
         {children}
         <Toaster position="top-right" richColors />
