@@ -90,12 +90,11 @@
 
 | Tipo       | Família             | Uso                                          |
 |------------|---------------------|----------------------------------------------|
-| Primária   | **Poppins** | Headlines, body, labels, botões            |
-| Monospace  | **JetBrains Mono**    | Código, dados numéricos, hex values, tokens |
+| Única      | **Poppins** | Headlines, body, labels, botões, valores numéricos |
 
 **CDN:**
 ```html
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 ```
 
 ### Escala Tipográfica
@@ -110,7 +109,7 @@
 | Body        | 14px    | 400  | 1.6         | 0         | Parágrafos, descrições       |
 | Small       | 12px    | 500  | 1.5         | 0         | Metadados, timestamps        |
 | Overline    | 11px    | 700  | 1.4         | 1.5px     | Labels de categoria (UPPERCASE) |
-| Code        | 13px    | 400  | 1.5         | 0         | Código, valores (JetBrains Mono) |
+| Code        | 13px    | 400  | 1.5         | 0         | Código, valores numéricos (Poppins) |
 
 ### Exemplo de CSS
 
@@ -146,7 +145,7 @@
 
 /* Code */
 .code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Poppins', sans-serif;
   font-size: 13px;
   font-weight: 400;
   color: var(--navy-70);
@@ -417,7 +416,7 @@ Label de contexto                75%
 
 - Header: `display: flex; justify-content: space-between`
 - Label: 13px, weight 600
-- Value: JetBrains Mono, 12px, navy-50
+- Value: Poppins, 12px, navy-50
 
 ### Circular
 
@@ -658,7 +657,7 @@ Copie e cole este bloco na raiz do seu projeto:
 
   /* === TIPOGRAFIA === */
   --font-primary: 'Poppins', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: 'Poppins', sans-serif;
 }
 ```
 
