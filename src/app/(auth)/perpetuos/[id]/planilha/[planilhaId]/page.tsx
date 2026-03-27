@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getDailyEntries } from "@/actions/dailyEntries";
 import { SpreadsheetGrid } from "@/components/planilha/SpreadsheetGrid";
+import { ExportPdfButton } from "@/components/planilha/ExportPdfButton";
 
 const MESES = [
   "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -33,16 +34,19 @@ export default async function PlanilhaPage({ params }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-3">
-        <Link
-          href={`/perpetuos/${params.id}`}
-          className="flex h-9 w-9 items-center justify-center rounded-md text-navy-50 transition-colors hover:bg-navy-05 hover:text-navy-dark"
-        >
-          <ArrowLeft size={20} strokeWidth={2} />
-        </Link>
-        <h1 className="text-[22px] font-bold tracking-[-0.3px] text-navy-dark">
-          {MESES[planilha.mes]} {planilha.ano}
-        </h1>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Link
+            href={`/perpetuos/${params.id}`}
+            className="flex h-9 w-9 items-center justify-center rounded-md text-navy-50 transition-colors hover:bg-navy-05 hover:text-navy-dark"
+          >
+            <ArrowLeft size={20} strokeWidth={2} />
+          </Link>
+          <h1 className="text-[22px] font-bold tracking-[-0.3px] text-navy-dark">
+            {MESES[planilha.mes]} {planilha.ano}
+          </h1>
+        </div>
+        <ExportPdfButton planilhaId={params.planilhaId} />
       </div>
       <SpreadsheetGrid
         entries={entries}

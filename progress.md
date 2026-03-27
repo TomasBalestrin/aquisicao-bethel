@@ -53,11 +53,12 @@ FEITO:
 - [x] Tela de concessão de acesso: selecionar quais perpétuos cada gestor vê
 - [x] Filtrar perpétuos visíveis no frontend baseado em perpetuo_access
 
+- [x] Dashboard: cards de métricas (investido, faturamento, lucro, margem, CPA, ticket médio)
+- [x] Dashboard: filtro por perpétuo e por período (data início / data fim)
+- [x] Dashboard: gráfico de evolução (linha do tempo de faturamento/lucro)
+- [x] Exportação PDF da planilha mensal
+
 FALTA:
-- [ ] Dashboard: cards de métricas (investido, faturamento, lucro, margem, CPA, ticket médio)
-- [ ] Dashboard: filtro por perpétuo e por período (data início / data fim)
-- [ ] Dashboard: gráfico de evolução (linha do tempo de faturamento/lucro)
-- [ ] Exportação PDF da planilha mensal
 - [ ] Checklist de segurança (RLS testado, env vars, .gitignore)
 - [ ] Deploy final em produção
 
