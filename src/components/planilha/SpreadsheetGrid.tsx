@@ -1,28 +1,55 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
+import { EyeOff } from "lucide-react";
 import type { DailyEntryRow } from "@/types/daily-entry";
-import { getColumns, GROUP_COLORS } from "./columnDefs";
+import { getColumns, GROUP_COLORS, type ColumnDef } from "./columnDefs";
 import { SpreadsheetRow } from "./SpreadsheetRow";
 import { TotalsRow } from "./TotalsRow";
 
 interface Props {
   entries: DailyEntryRow[];
+  planilhaId: string;
   planilha: {
     ob1_nome: string; ob2_nome: string; ob3_nome: string;
     ob4_nome: string; ob5_nome: string;
     upsell_nome: string; downsell_nome: string;
   };
+  onShowAll?: () => void;
 }
 
-export function SpreadsheetGrid({ entries: initial, planilha }: Props) {
+const STORAGE_KEY = (id: string) => `hidden-columns-${id}`;
+
+export function SpreadsheetGrid({ entries: initial, planilhaId, planilha }: Props) {
   const [entries, setEntries] = useState(initial);
-  const columns = getColumns(planilha);
+  const allColumns = useMemo(() => getColumns(planilha), [planilha]);
+  const [hidden, setHidden] = useState<Set<string>>(() => {
+    if (typeof window === "undefined") return new Set();
+    const stored = localStorage.getItem(STORAGE_KEY(planilhaId));
+    return stored ? new Set(JSON.parse(stored) as string[]) : new Set();
+  });
+
+  useEffect(() => {
+    if (hidden.size === 0) localStorage.removeItem(STORAGE_KEY(planilhaId));
+    else localStorage.setItem(STORAGE_KEY(planilhaId), JSON.stringify(Array.from(hidden)));
+  }, [hidden, planilhaId]);
+
+  const columns = useMemo(() => allColumns.filter((c) => !hidden.has(c.key)), [allColumns, hidden]);
 
   const handleUpdate = useCallback((entryId: string, field: string, value: number) => {
-    setEntries((prev) =>
-      prev.map((e) => (e.id === entryId ? { ...e, [field]: value } : e))
-    );
+    setEntries((prev) => prev.map((e) => (e.id === entryId ? { ...e, [field]: value } : e)));
+  }, []);
+
+  const hideColumn = useCallback((key: string) => {
+    setHidden((prev) => { const next = new Set(prev); next.add(key); return next; });
+  }, []);
+
+  // expose showAll via global for the page button
+  useEffect(() => {
+    (window as unknown as Record<string, unknown>).__showAllColumns = () => {
+      setHidden(new Set());
+    };
+    return () => { delete (window as unknown as Record<string, unknown>).__showAllColumns; };
   }, []);
 
   return (
@@ -30,18 +57,9 @@ export function SpreadsheetGrid({ entries: initial, planilha }: Props) {
       <table className="w-max min-w-full border-collapse">
         <thead>
           <tr>
-            {columns.map((col) => {
-              const gc = GROUP_COLORS[col.group];
-              const bgClass = gc?.header ?? "bg-navy-dark";
-              return (
-                <th
-                  key={col.key}
-                  className={`${col.width} whitespace-nowrap border-b border-r border-white/20 ${bgClass} px-2 py-2.5 text-left text-[11px] font-semibold text-white`}
-                >
-                  {col.label}
-                </th>
-              );
-            })}
+            {columns.map((col) => (
+              <HeaderCell key={col.key} col={col} onHide={hideColumn} />
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -54,5 +72,26 @@ export function SpreadsheetGrid({ entries: initial, planilha }: Props) {
         </tfoot>
       </table>
     </div>
+  );
+}
+
+function HeaderCell({ col, onHide }: { col: ColumnDef; onHide: (key: string) => void }) {
+  const gc = GROUP_COLORS[col.group];
+  const bgClass = gc?.header ?? "bg-navy-dark";
+  const canHide = col.key !== "data";
+
+  return (
+    <th className={`${col.width} group/th relative whitespace-nowrap border-b border-r border-white/20 ${bgClass} px-2 py-2.5 text-left text-[11px] font-semibold text-white`}>
+      {col.label}
+      {canHide && (
+        <button
+          onClick={() => onHide(col.key)}
+          className="absolute right-1 top-1/2 hidden -translate-y-1/2 rounded p-0.5 text-white/60 hover:text-white group-hover/th:block"
+          title={`Ocultar ${col.label}`}
+        >
+          <EyeOff size={12} strokeWidth={2} />
+        </button>
+      )}
+    </th>
   );
 }

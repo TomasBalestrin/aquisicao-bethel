@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getDailyEntries } from "@/actions/dailyEntries";
 import { SpreadsheetGrid } from "@/components/planilha/SpreadsheetGrid";
-import { ExportPdfButton } from "@/components/planilha/ExportPdfButton";
+import { PlanilhaToolbar } from "@/components/planilha/PlanilhaToolbar";
 
 const MESES = [
   "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -34,7 +34,7 @@ export default async function PlanilhaPage({ params }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Link
             href={`/perpetuos/${params.id}`}
@@ -46,10 +46,16 @@ export default async function PlanilhaPage({ params }: Props) {
             {MESES[planilha.mes]} {planilha.ano}
           </h1>
         </div>
-        <ExportPdfButton planilhaId={params.planilhaId} />
+        <PlanilhaToolbar
+          planilhaId={params.planilhaId}
+          perpetuoId={params.id}
+          mes={planilha.mes}
+          ano={planilha.ano}
+        />
       </div>
       <SpreadsheetGrid
         entries={entries}
+        planilhaId={params.planilhaId}
         planilha={{
           ob1_nome: planilha.ob1_nome, ob2_nome: planilha.ob2_nome,
           ob3_nome: planilha.ob3_nome, ob4_nome: planilha.ob4_nome,

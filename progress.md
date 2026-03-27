@@ -65,6 +65,10 @@ FEITO:
 - [x] Atualizar design-system.md (Poppins + cores colunas)
 - [x] Atualizar CLAUDE.md (font primária → Poppins)
 - [x] Atualizar schema.md (nova ordem + faturamento_extras)
+- [x] Ocultar/exibir colunas com ícone eye-off no header (persiste no localStorage)
+- [x] Botão "Mostrar Colunas" para revelar todas as colunas ocultas
+- [x] Duplicar planilha: copia nomes dos OBs, sugere próximo mês, valores zerados
+- [x] Toolbar unificada: Mostrar Colunas + Duplicar + Exportar PDF
 
 ---
 

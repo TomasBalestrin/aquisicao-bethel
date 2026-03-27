@@ -688,6 +688,24 @@ Copie e cole este bloco na raiz do seu projeto:
 
 ---
 
-> **Design System v1.1** — Atualizado em Março 2026
-> Fonte primária alterada de Plus Jakarta Sans para Poppins.
-> Adicionadas cores pastel por categoria para colunas da planilha.
+## Ocultar/Exibir Colunas
+
+- Ao passar o mouse sobre o header de uma coluna, aparece ícone `eye-off` (Lucide) no canto direito
+- Clicar oculta a coluna inteira (header + células + totais)
+- Coluna "Dia" nunca pode ser ocultada
+- Colunas ocultas são salvas no `localStorage` com chave `hidden-columns-{planilhaId}`
+- Botão "Mostrar Colunas" (ícone `eye`) na toolbar revela todas e limpa localStorage
+
+## Duplicar Planilha
+
+- Botão "Duplicar" (ícone `copy`) na toolbar da planilha
+- Modal com mês/ano pré-preenchidos para o próximo mês
+- Copia nomes dos Order Bumps, Upsell e Downsell da original
+- Valores começam zerados (pré-cria daily_entries)
+- Após duplicar, redireciona para a nova planilha
+
+---
+
+> **Design System v1.2** — Atualizado em Março 2026
+> Fonte primária: Poppins. Cores pastel por categoria nas colunas.
+> Ocultar/exibir colunas com persistência. Duplicar planilha.
