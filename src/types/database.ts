@@ -1,6 +1,9 @@
+import type { DailyEntryRow, DailyEntryInsert, DailyEntryUpdate } from "./daily-entry";
+
+export type { DailyEntryRow, DailyEntryInsert, DailyEntryUpdate };
 export type UserRole = "head" | "gestor";
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       users: {
@@ -10,7 +13,7 @@ export interface Database {
           name: string;
           password_hash: string;
           avatar_url: string | null;
-          role: UserRole;
+          role: string;
           created_at: string;
           updated_at: string;
         };
@@ -20,7 +23,7 @@ export interface Database {
           name: string;
           password_hash: string;
           avatar_url?: string | null;
-          role?: UserRole;
+          role?: string;
           created_at?: string;
           updated_at?: string;
         };
@@ -30,19 +33,11 @@ export interface Database {
           name?: string;
           password_hash?: string;
           avatar_url?: string | null;
-          role?: UserRole;
+          role?: string;
           created_at?: string;
           updated_at?: string;
         };
-        Relationships: [
-          {
-            foreignKeyName: "perpetuos_created_by_fkey";
-            columns: ["id"];
-            isOneToOne: false;
-            referencedRelation: "perpetuos";
-            referencedColumns: ["created_by"];
-          },
-        ];
+        Relationships: [];
       };
       perpetuos: {
         Row: {
@@ -113,51 +108,9 @@ export interface Database {
         ];
       };
       planilhas: {
-        Row: {
-          id: string;
-          perpetuo_id: string;
-          mes: number;
-          ano: number;
-          ob1_nome: string;
-          ob2_nome: string;
-          ob3_nome: string;
-          ob4_nome: string;
-          ob5_nome: string;
-          upsell_nome: string;
-          downsell_nome: string;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          perpetuo_id: string;
-          mes: number;
-          ano: number;
-          ob1_nome?: string;
-          ob2_nome?: string;
-          ob3_nome?: string;
-          ob4_nome?: string;
-          ob5_nome?: string;
-          upsell_nome?: string;
-          downsell_nome?: string;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          perpetuo_id?: string;
-          mes?: number;
-          ano?: number;
-          ob1_nome?: string;
-          ob2_nome?: string;
-          ob3_nome?: string;
-          ob4_nome?: string;
-          ob5_nome?: string;
-          upsell_nome?: string;
-          downsell_nome?: string;
-          created_at?: string;
-          updated_at?: string;
-        };
+        Row: PlanilhaRow;
+        Insert: PlanilhaInsert;
+        Update: PlanilhaUpdate;
         Relationships: [
           {
             foreignKeyName: "planilhas_perpetuo_id_fkey";
@@ -183,101 +136,58 @@ export interface Database {
         ];
       };
     };
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
-    Enums: {
-      user_role: UserRole;
+    Views: {
+      [_ in never]: never;
     };
-    CompositeTypes: Record<string, never>;
+    Functions: {
+      get_user_role: {
+        Args: Record<string, never>;
+        Returns: string;
+      };
+      has_perpetuo_access: {
+        Args: { p_perpetuo_id: string };
+        Returns: boolean;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
   };
-}
+};
 
-export interface DailyEntryRow {
+export type PlanilhaRow = {
   id: string;
-  planilha_id: string;
-  data: string;
-  investimento: number;
-  faturamento_principal: number;
-  vendas_principal: number;
-  ob1_faturado: number;
-  ob1_vendas: number;
-  ob2_faturado: number;
-  ob2_vendas: number;
-  ob3_faturado: number;
-  ob3_vendas: number;
-  ob4_faturado: number;
-  ob4_vendas: number;
-  ob5_faturado: number;
-  ob5_vendas: number;
-  upsell_faturado: number;
-  upsell_vendas: number;
-  downsell_faturado: number;
-  downsell_vendas: number;
-  ctr: number;
-  page_view: number;
-  carregamento: number;
-  initiate_checkout: number;
-  cpm: number;
+  perpetuo_id: string;
+  mes: number;
+  ano: number;
+  ob1_nome: string;
+  ob2_nome: string;
+  ob3_nome: string;
+  ob4_nome: string;
+  ob5_nome: string;
+  upsell_nome: string;
+  downsell_nome: string;
   created_at: string;
   updated_at: string;
-}
+};
 
-export interface DailyEntryInsert {
+export type PlanilhaInsert = {
   id?: string;
-  planilha_id: string;
-  data: string;
-  investimento?: number;
-  faturamento_principal?: number;
-  vendas_principal?: number;
-  ob1_faturado?: number;
-  ob1_vendas?: number;
-  ob2_faturado?: number;
-  ob2_vendas?: number;
-  ob3_faturado?: number;
-  ob3_vendas?: number;
-  ob4_faturado?: number;
-  ob4_vendas?: number;
-  ob5_faturado?: number;
-  ob5_vendas?: number;
-  upsell_faturado?: number;
-  upsell_vendas?: number;
-  downsell_faturado?: number;
-  downsell_vendas?: number;
-  ctr?: number;
-  page_view?: number;
-  carregamento?: number;
-  initiate_checkout?: number;
-  cpm?: number;
+  perpetuo_id: string;
+  mes: number;
+  ano: number;
+  ob1_nome?: string;
+  ob2_nome?: string;
+  ob3_nome?: string;
+  ob4_nome?: string;
+  ob5_nome?: string;
+  upsell_nome?: string;
+  downsell_nome?: string;
   created_at?: string;
   updated_at?: string;
-}
+};
 
-export interface DailyEntryUpdate {
-  id?: string;
-  planilha_id?: string;
-  data?: string;
-  investimento?: number;
-  faturamento_principal?: number;
-  vendas_principal?: number;
-  ob1_faturado?: number;
-  ob1_vendas?: number;
-  ob2_faturado?: number;
-  ob2_vendas?: number;
-  ob3_faturado?: number;
-  ob3_vendas?: number;
-  ob4_faturado?: number;
-  ob4_vendas?: number;
-  ob5_faturado?: number;
-  ob5_vendas?: number;
-  upsell_faturado?: number;
-  upsell_vendas?: number;
-  downsell_faturado?: number;
-  downsell_vendas?: number;
-  ctr?: number;
-  page_view?: number;
-  carregamento?: number;
-  initiate_checkout?: number;
-  cpm?: number;
-  created_at?: string;
-  updated_at?: string;
-}
+export type PlanilhaUpdate = Partial<PlanilhaInsert>;
