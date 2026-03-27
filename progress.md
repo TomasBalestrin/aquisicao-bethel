@@ -1,7 +1,7 @@
 # Progress — PerpetuoHQ
 
 ## Status geral
-MILESTONE ATUAL: 3 — Gestores + Dashboard + PDF
+MILESTONE ATUAL: CONCLUÍDO
 INÍCIO: Março 2026
 ÚLTIMA SESSÃO: 2026-03-27
 
@@ -14,67 +14,51 @@ INÍCIO: Março 2026
 FEITO:
 - [x] Inicializar projeto Next.js 14 App Router + TypeScript strict + Tailwind + shadcn/ui
 - [x] Configurar Supabase (criar projeto, env vars, client/server configs)
-- [x] Criar tabelas do schema.md no Supabase (users, perpetuos, perpetuo_access, planilhas, daily_entries)
+- [x] Criar tabelas do schema.md no Supabase
 - [x] Ativar RLS em todas as tabelas e configurar políticas
-- [x] Auth completa com Supabase Auth (cadastro + login + logout + middleware de proteção)
-- [x] Layout base: sidebar com navegação (Dashboard, Perpétuos, Gestores, Config) + header com avatar/logout
-- [x] Configurar Supabase Storage para upload de avatares
-- [x] Aplicar design system (cores, fontes, componentes base)
-- [x] Deploy na Vercel + variáveis de ambiente configuradas
+- [x] Auth completa com Supabase Auth
+- [x] Layout base: sidebar + header
+- [x] Configurar Supabase Storage para avatares
+- [x] Aplicar design system
+- [x] Deploy na Vercel
 - [x] Testar login em staging
 
 ---
 
 ## Milestone 2 — Core (Perpétuos + Planilhas) ✅
-**Objetivo:** CRUD de perpétuos, criação de planilhas mensais e preenchimento de dados diários
-**Entregável:** Gestor consegue acessar um perpétuo, criar planilha do mês e preencher dados diários com cálculos automáticos funcionando
+**Objetivo:** CRUD de perpétuos, criação de planilhas e preenchimento de dados diários
 
 FEITO:
-- [x] CRUD de perpétuos (criar, editar nome, excluir com confirmação)
-- [x] Tela de listagem de perpétuos com cards
-- [x] Tela interna do perpétuo com lista de planilhas (mês/ano)
-- [x] Criar planilha: selecionar mês/ano, definir nomes dos OBs/upsell/downsell
+- [x] CRUD de perpétuos com cards, modals e confirmação
+- [x] Criar planilha com mês/ano e nomes customizados
 - [x] Pré-criar daily_entries ao criar planilha
-- [x] Interface tipo spreadsheet: grid editável com todas as colunas de métricas
-- [x] Cálculos automáticos no frontend (faturamento total, lucro, margem, CPA, ticket médio, taxas, funil)
-- [x] Salvar dados ao editar célula (debounce de 500ms)
-- [x] Linha de totais/médias no rodapé da planilha
-- [x] Testes manuais do fluxo completo de preenchimento
+- [x] Interface spreadsheet com grid editável
+- [x] Cálculos automáticos (fat total, lucro, margem, CPA, ticket, taxas, funil)
+- [x] Salvar com debounce de 500ms
+- [x] Linha de totais/médias
 
 ---
 
-## Milestone 3 — Gestores + Dashboard + PDF
-**Objetivo:** Controle de acesso por gestor, dashboard com filtros e exportação PDF
-**Entregável:** Sistema completo com Head gerenciando gestores, dashboard consolidado e relatório PDF
+## Milestone 3 — Gestores + Dashboard + PDF ✅
+**Objetivo:** Controle de acesso, dashboard e exportação PDF
 
 FEITO:
-- [x] CRUD de gestores (criar com email/senha/foto, editar, excluir)
+- [x] CRUD de gestores (criar via admin API, editar, excluir)
 - [x] Upload de foto de perfil via Supabase Storage
-- [x] Tela de concessão de acesso: selecionar quais perpétuos cada gestor vê
-- [x] Filtrar perpétuos visíveis no frontend baseado em perpetuo_access
-
-- [x] Dashboard: cards de métricas (investido, faturamento, lucro, margem, CPA, ticket médio)
-- [x] Dashboard: filtro por perpétuo e por período (data início / data fim)
-- [x] Dashboard: gráfico de evolução (linha do tempo de faturamento/lucro)
+- [x] Concessão de acesso a perpétuos via checkboxes
+- [x] Dashboard com 6 cards de métricas + filtros + gráfico de evolução
 - [x] Exportação PDF da planilha mensal
-
-FALTA:
-- [ ] Checklist de segurança (RLS testado, env vars, .gitignore)
-- [ ] Deploy final em produção
+- [x] Página de configurações (editar perfil + foto)
+- [x] Checklist de segurança (RLS, env vars, .gitignore, Zod)
+- [x] Revisão final de qualidade
 
 ---
 
 ## Decisões técnicas
-- Valores monetários em centavos (integer) no banco, exibidos como R$ na interface
-- Campos calculados NÃO armazenados no banco — calculados no frontend
-- Ao criar planilha, pré-criar todas as daily_entries do mês (facilita grid)
-- Design system fixo: Navy + Gold + White conforme design-system.md
+- Valores monetários em centavos (integer) no banco, R$ na interface
+- Campos calculados NÃO armazenados no banco
+- Pré-criar daily_entries ao criar planilha
+- Design system: Navy + Gold + White
 - Supabase Auth com email/password (sem OAuth)
-- Zod para validação de inputs em todas as Server Actions
-
----
-
-## Prompts que funcionaram bem
-(Salvar prompts que geraram resultado excelente para reusar)
-
-- (vazio — preencher conforme usar)
+- Zod para validação em todas as Server Actions
+- Admin client com SERVICE_ROLE_KEY para gestão de usuários

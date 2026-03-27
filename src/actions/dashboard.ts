@@ -1,15 +1,18 @@
 "use server";
 
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "./auth";
 import { calcFaturamentoTotal, calcLucro, safeDivide } from "@/lib/utils/calcMetrics";
 import type { DailyEntryRow } from "@/types/daily-entry";
 
-interface Filters {
-  perpetuoId?: string;
-  dataInicio?: string;
-  dataFim?: string;
-}
+const filtersSchema = z.object({
+  perpetuoId: z.string().uuid().optional(),
+  dataInicio: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  dataFim: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+});
+
+type Filters = z.infer<typeof filtersSchema>;
 
 export interface DashboardMetrics {
   investido: number;
@@ -34,6 +37,9 @@ interface DashboardResult {
 }
 
 export async function getDashboardData(filters: Filters): Promise<DashboardResult> {
+  const parsed = filtersSchema.safeParse(filters);
+  if (!parsed.success) return { success: false, error: "Filtros inválidos" };
+
   const user = await getCurrentUser();
   if (!user) return { success: false, error: "Não autenticado" };
 

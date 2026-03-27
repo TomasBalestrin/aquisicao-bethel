@@ -23,7 +23,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/perpetuos", label: "Perpétuos", icon: Infinity },
   { href: "/gestores", label: "Gestores", icon: Users },
-  { href: "/configuracoes", label: "Configurações", icon: Settings },
+  { href: "/settings", label: "Configurações", icon: Settings },
 ];
 
 export function Sidebar({ userName, userRole }: SidebarProps) {

@@ -28,11 +28,10 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
 
-  // Redireciona usuario nao autenticado de rotas /(auth)/* para /login
-  if (!user && pathname.startsWith("/dashboard") ||
-      !user && pathname.startsWith("/perpetuos") ||
-      !user && pathname.startsWith("/gestores") ||
-      !user && pathname.startsWith("/configuracoes")) {
+  const authRoutes = ["/dashboard", "/perpetuos", "/gestores", "/configuracoes", "/settings"];
+  const isAuthRoute = authRoutes.some((r) => pathname.startsWith(r));
+
+  if (!user && isAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
