@@ -1,6 +1,8 @@
 import type { DailyEntryRow, DailyEntryInsert, DailyEntryUpdate } from "./daily-entry";
+import type { PlanilhaRow, PlanilhaInsert, PlanilhaUpdate } from "./planilha";
 
 export type { DailyEntryRow, DailyEntryInsert, DailyEntryUpdate };
+export type { PlanilhaRow, PlanilhaInsert, PlanilhaUpdate };
 export type UserRole = "head" | "gestor";
 
 export type Database = {
@@ -90,22 +92,7 @@ export type Database = {
           user_id?: string;
           created_at?: string;
         };
-        Relationships: [
-          {
-            foreignKeyName: "perpetuo_access_perpetuo_id_fkey";
-            columns: ["perpetuo_id"];
-            isOneToOne: false;
-            referencedRelation: "perpetuos";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "perpetuo_access_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
+        Relationships: [];
       };
       planilhas: {
         Row: PlanilhaRow;
@@ -157,37 +144,3 @@ export type Database = {
     };
   };
 };
-
-export type PlanilhaRow = {
-  id: string;
-  perpetuo_id: string;
-  mes: number;
-  ano: number;
-  ob1_nome: string;
-  ob2_nome: string;
-  ob3_nome: string;
-  ob4_nome: string;
-  ob5_nome: string;
-  upsell_nome: string;
-  downsell_nome: string;
-  created_at: string;
-  updated_at: string;
-};
-
-export type PlanilhaInsert = {
-  id?: string;
-  perpetuo_id: string;
-  mes: number;
-  ano: number;
-  ob1_nome?: string;
-  ob2_nome?: string;
-  ob3_nome?: string;
-  ob4_nome?: string;
-  ob5_nome?: string;
-  upsell_nome?: string;
-  downsell_nome?: string;
-  created_at?: string;
-  updated_at?: string;
-};
-
-export type PlanilhaUpdate = Partial<PlanilhaInsert>;

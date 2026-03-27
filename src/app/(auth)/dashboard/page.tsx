@@ -1,14 +1,18 @@
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/actions/auth";
+import { getPerpetuos } from "@/actions/perpetuos";
+import { DashboardClient } from "@/components/dashboard/DashboardClient";
+
 export const metadata = {
   title: "Dashboard — PerpetuoHQ",
 };
 
-export default function DashboardPage() {
-  return (
-    <div className="flex flex-col gap-4">
-      <h1 className="text-[28px] font-bold tracking-[-0.5px] text-navy-dark">
-        Dashboard
-      </h1>
-      <p className="text-sm text-navy-50">Em breve</p>
-    </div>
-  );
+export default async function DashboardPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const result = await getPerpetuos();
+  const perpetuos = (result.data ?? []).map((p) => ({ id: p.id, name: p.name }));
+
+  return <DashboardClient perpetuos={perpetuos} />;
 }
