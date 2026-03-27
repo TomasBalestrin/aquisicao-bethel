@@ -91,19 +91,26 @@ Estes campos são calculados no frontend em tempo real:
 
 | Campo | Fórmula |
 |-------|---------|
-| faturamento_total | faturamento_principal + ob1_faturado + ob2_faturado + ob3_faturado + ob4_faturado + ob5_faturado + upsell_faturado + downsell_faturado |
+| faturamento_total | faturamento_principal + ob1..5_faturado + upsell_faturado + downsell_faturado |
+| faturamento_extras | ob1..5_faturado + upsell_faturado + downsell_faturado |
 | lucro | faturamento_total - investimento |
 | margem | (lucro / faturamento_total) × 100 |
 | cpa | investimento / vendas_principal |
 | ticket_medio | faturamento_total / vendas_principal |
-| ob[N]_taxa | (ob[N]_vendas / vendas_principal) × 100 |
-| upsell_taxa | (upsell_vendas / vendas_principal) × 100 |
-| downsell_taxa | (downsell_vendas / vendas_principal) × 100 |
 | pag_compra | (vendas_principal / page_view) × 100 |
 | pag_check | (initiate_checkout / page_view) × 100 |
 | check_compra | (vendas_principal / initiate_checkout) × 100 |
 
+### Ordem das colunas na planilha
+
+Dia (dd/mm/aaaa) → Investimento → Fat. Total → Vendas → Lucro → Margem% →
+Nº Vendas Princ. → Vendas Princ. R$ → Fat. Extras →
+OB1..5 (R$ + Vendas) → Upsell (R$ + Vendas) → Downsell (R$ + Vendas) →
+CPA → Ticket Médio → CTR% → Page Views → Carreg. → Início Check →
+Pág→Compra% → Pág→Check% → Check→Compra% → CPM
+
 > Divisões por zero: quando o divisor for 0, exibir "—" na interface.
+> Lucro/Margem positivos em verde (#2E7D32), negativos em vermelho (#C62828).
 
 ## Relações
 - users 1:N perpetuo_access (via user_id)

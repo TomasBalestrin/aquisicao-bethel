@@ -58,7 +58,7 @@
 ## UI / Design system
 - Seguir TODAS as specs do design-system.md (cores, tipografia, componentes, estados)
 - Cores primárias: Navy Dark #001321, Gold #B19365, White #FFFFFF
-- Font primária: Plus Jakarta Sans (via Google Fonts)
+- Font primária: Poppins (via next/font/local)
 - Font mono: JetBrains Mono (para valores numéricos na planilha)
 - Border radius padrão: rounded-lg (14px) em cards, rounded-md (10px) em botões LG, rounded (6px) em inputs
 - Responsivo: mobile-first, breakpoints sm/md/lg do Tailwind

@@ -90,12 +90,12 @@
 
 | Tipo       | Família             | Uso                                          |
 |------------|---------------------|----------------------------------------------|
-| Primária   | **Plus Jakarta Sans** | Headlines, body, labels, botões            |
+| Primária   | **Poppins** | Headlines, body, labels, botões            |
 | Monospace  | **JetBrains Mono**    | Código, dados numéricos, hex values, tokens |
 
 **CDN:**
 ```html
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 ```
 
 ### Escala Tipográfica
@@ -117,7 +117,7 @@
 ```css
 /* Display */
 .display {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 48px;
   font-weight: 800;
   line-height: 1.1;
@@ -127,7 +127,7 @@
 
 /* Body */
 .body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.6;
@@ -136,7 +136,7 @@
 
 /* Overline / Label */
 .overline {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -264,7 +264,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -466,7 +466,7 @@ Done   Done  Active Pending
 .form-input {
   width: 100%;
   padding: 10px 14px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 13.5px;
   border: 1.5px solid var(--gray-300);
   border-radius: var(--radius-sm);     /* 6px */
@@ -657,12 +657,37 @@ Copie e cole este bloco na raiz do seu projeto:
   --shadow-xl: 0 16px 50px rgba(0, 19, 33, 0.16);
 
   /* === TIPOGRAFIA === */
-  --font-primary: 'Plus Jakarta Sans', sans-serif;
+  --font-primary: 'Poppins', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 ```
 
 ---
 
-> **Design System v1.0** — Gerado em Março 2026
-> Todas as CSS Variables disponíveis como tokens para uso direto em vibe coding.
+## Cores das Colunas da Planilha
+
+> Cores pastel por categoria para facilitar a leitura da planilha tipo spreadsheet.
+
+| Categoria | Header | Células | Hex |
+|-----------|--------|---------|-----|
+| Investimento / CPM | Azul escuro | Azul claro pastel | `#EBF5FF` |
+| Faturamento / Vendas / Lucro / Margem | Verde escuro | Verde claro pastel | `#E8F5E9` |
+| Order Bumps (1-5) | Amarelo escuro | Amarelo claro pastel | `#FFF8E1` |
+| Upsell / Downsell | Roxo escuro | Roxo claro pastel | `#F3E5F5` |
+| Tráfego (CTR, Page Views, Checkout, Funil) | Laranja escuro | Laranja claro pastel | `#FFF3E0` |
+| CPA / Ticket Médio | Cinza escuro | Cinza claro | `#F5F5F5` |
+
+### Cores dinâmicas nos valores
+
+| Campo | Condição | Cor |
+|-------|----------|-----|
+| Lucro | Positivo | Verde `#2E7D32` |
+| Lucro | Negativo | Vermelho `#C62828` |
+| Margem % | Acima de 0% | Verde `#2E7D32` |
+| Margem % | Abaixo de 0% | Vermelho `#C62828` |
+
+---
+
+> **Design System v1.1** — Atualizado em Março 2026
+> Fonte primária alterada de Plus Jakarta Sans para Poppins.
+> Adicionadas cores pastel por categoria para colunas da planilha.

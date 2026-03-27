@@ -51,7 +51,7 @@
     --shadow-xl: 0 16px 50px rgba(0, 19, 33, 0.16);
 
     /* === TIPOGRAFIA === */
-    --font-primary: var(--font-plus-jakarta);
+    --font-primary: var(--font-poppins);
     --font-mono: var(--font-jetbrains);
 
     /* === shadcn/ui tokens === */

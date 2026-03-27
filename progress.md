@@ -9,7 +9,6 @@ INÍCIO: Março 2026
 
 ## Milestone 1 — Fundação ✅
 **Objetivo:** Auth + layout base + banco configurado + deploy em staging
-**Entregável:** Head e Gestor conseguem criar conta, logar e ver o dashboard vazio com sidebar navegável
 
 FEITO:
 - [x] Inicializar projeto Next.js 14 App Router + TypeScript strict + Tailwind + shadcn/ui
@@ -54,11 +53,27 @@ FEITO:
 
 ---
 
+## Ajustes pós-launch — 2026-03-27
+
+- [x] Trocar fonte primária de Plus Jakarta Sans para Poppins (300-800)
+- [x] Reordenar colunas da planilha conforme nova especificação (32 colunas)
+- [x] Adicionar coluna "Faturamento Extras" (soma OBs + upsell + downsell)
+- [x] Adicionar coluna "Nº Vendas Produto Principal"
+- [x] Formato de data dd/mm/aaaa nas linhas da planilha
+- [x] Cores pastel por categoria nos headers e células da planilha
+- [x] Cores dinâmicas: lucro/margem verde (positivo) ou vermelho (negativo)
+- [x] Atualizar design-system.md (Poppins + cores colunas)
+- [x] Atualizar CLAUDE.md (font primária → Poppins)
+- [x] Atualizar schema.md (nova ordem + faturamento_extras)
+
+---
+
 ## Decisões técnicas
 - Valores monetários em centavos (integer) no banco, R$ na interface
 - Campos calculados NÃO armazenados no banco
 - Pré-criar daily_entries ao criar planilha
 - Design system: Navy + Gold + White
+- Font primária: Poppins (substituiu Plus Jakarta Sans)
 - Supabase Auth com email/password (sem OAuth)
 - Zod para validação em todas as Server Actions
 - Admin client com SERVICE_ROLE_KEY para gestão de usuários
