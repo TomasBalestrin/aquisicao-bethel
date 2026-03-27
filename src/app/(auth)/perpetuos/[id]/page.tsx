@@ -26,7 +26,12 @@ export default async function PerpetuoDetailPage({ params }: { params: { id: str
       <PerpetuoDetail
         perpetuoId={perpetuo.id}
         perpetuoName={perpetuo.name}
-        planilhas={(planilhas ?? []).map((p) => ({ id: p.id, mes: p.mes, ano: p.ano }))}
+        planilhas={(planilhas ?? []).map((p) => ({
+          id: p.id, mes: p.mes, ano: p.ano,
+          ob1_nome: p.ob1_nome, ob2_nome: p.ob2_nome, ob3_nome: p.ob3_nome,
+          ob4_nome: p.ob4_nome, ob5_nome: p.ob5_nome,
+          upsell_nome: p.upsell_nome, downsell_nome: p.downsell_nome,
+        }))}
       />
     </div>
   );

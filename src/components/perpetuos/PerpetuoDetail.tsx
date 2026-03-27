@@ -2,12 +2,20 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, FileSpreadsheet, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, FileSpreadsheet, Plus, Trash2, Copy, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { CreatePlanilhaDialog } from "@/components/planilha/CreatePlanilhaDialog";
+import { DuplicatePlanilhaDialog } from "@/components/planilha/DuplicatePlanilhaDialog";
+import { EditNomesDialog } from "@/components/planilha/EditNomesDialog";
 import { deletePlanilha } from "@/actions/planilhas";
 
-interface Planilha {
+interface PlanilhaNomes {
+  ob1_nome: string; ob2_nome: string; ob3_nome: string;
+  ob4_nome: string; ob5_nome: string;
+  upsell_nome: string; downsell_nome: string;
+}
+
+interface Planilha extends PlanilhaNomes {
   id: string;
   mes: number;
   ano: number;
@@ -24,8 +32,12 @@ const MESES = [
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
+const btnCls = "flex items-center gap-1.5 rounded-[6px] px-3 py-[7px] text-[12px] font-semibold transition-colors";
+
 export function PerpetuoDetail({ perpetuoId, perpetuoName, planilhas }: Props) {
   const [showCreate, setShowCreate] = useState(false);
+  const [dupTarget, setDupTarget] = useState<Planilha | null>(null);
+  const [editTarget, setEditTarget] = useState<Planilha | null>(null);
 
   async function handleDelete(planilhaId: string) {
     const result = await deletePlanilha(planilhaId, perpetuoId);
@@ -54,18 +66,25 @@ export function PerpetuoDetail({ perpetuoId, perpetuoName, planilhas }: Props) {
             <FileSpreadsheet size={28} strokeWidth={2} className="text-navy-30" />
           </div>
           <p className="text-[14px] font-medium text-navy-50">Nenhuma planilha criada</p>
-          <p className="text-[12px] text-navy-30">Clique em &quot;Nova Planilha&quot; para começar</p>
         </div>
       ) : (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {planilhas.map((p) => (
-            <div key={p.id} className="group rounded-lg border border-gray-200 bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
+            <div key={p.id} className="rounded-lg border border-gray-200 bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
               <Link href={`/perpetuos/${perpetuoId}/planilha/${p.id}`} className="flex items-center gap-2">
                 <FileSpreadsheet size={18} strokeWidth={2} className="text-gold" />
                 <h3 className="text-[15px] font-semibold text-navy-dark">{MESES[p.mes]} {p.ano}</h3>
               </Link>
-              <div className="mt-3 border-t border-gray-200 pt-2">
-                <button onClick={() => handleDelete(p.id)} className="flex items-center gap-1.5 rounded-[6px] px-3 py-[7px] text-[12px] font-semibold text-error transition-colors hover:bg-[#FFEBEE]">
+              <div className="mt-3 flex flex-wrap gap-1 border-t border-gray-200 pt-2">
+                <button onClick={() => setDupTarget(p)} className={`${btnCls} text-navy-dark hover:bg-navy-05`}>
+                  <Copy size={14} strokeWidth={2} />
+                  Duplicar
+                </button>
+                <button onClick={() => setEditTarget(p)} className={`${btnCls} text-gold hover:bg-gold-lightest`}>
+                  <Settings size={14} strokeWidth={2} />
+                  Nomes
+                </button>
+                <button onClick={() => handleDelete(p.id)} className={`${btnCls} text-error hover:bg-[#FFEBEE]`}>
                   <Trash2 size={14} strokeWidth={2} />
                   Excluir
                 </button>
@@ -76,6 +95,27 @@ export function PerpetuoDetail({ perpetuoId, perpetuoName, planilhas }: Props) {
       )}
 
       <CreatePlanilhaDialog open={showCreate} onClose={() => setShowCreate(false)} perpetuoId={perpetuoId} />
+
+      {dupTarget && (
+        <DuplicatePlanilhaDialog
+          open onClose={() => setDupTarget(null)}
+          planilhaId={dupTarget.id} perpetuoId={perpetuoId}
+          currentMes={dupTarget.mes} currentAno={dupTarget.ano}
+        />
+      )}
+
+      {editTarget && (
+        <EditNomesDialog
+          open onClose={() => setEditTarget(null)}
+          planilhaId={editTarget.id} perpetuoId={perpetuoId}
+          nomes={{
+            ob1_nome: editTarget.ob1_nome, ob2_nome: editTarget.ob2_nome,
+            ob3_nome: editTarget.ob3_nome, ob4_nome: editTarget.ob4_nome,
+            ob5_nome: editTarget.ob5_nome,
+            upsell_nome: editTarget.upsell_nome, downsell_nome: editTarget.downsell_nome,
+          }}
+        />
+      )}
     </>
   );
 }
