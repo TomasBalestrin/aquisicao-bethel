@@ -30,18 +30,17 @@ FEITO:
 **Entregável:** Gestor consegue acessar um perpétuo, criar planilha do mês e preencher dados diários com cálculos automáticos funcionando
 
 FEITO:
-- (preencher conforme implementar)
+- [x] CRUD de perpétuos (criar, editar nome, excluir com confirmação)
+- [x] Tela de listagem de perpétuos com cards
+- [x] Tela interna do perpétuo com lista de planilhas (mês/ano)
+- [x] Criar planilha: selecionar mês/ano, definir nomes dos OBs/upsell/downsell
+- [x] Pré-criar daily_entries ao criar planilha
+- [x] Interface tipo spreadsheet: grid editável com todas as colunas de métricas
+- [x] Cálculos automáticos no frontend (faturamento total, lucro, margem, CPA, ticket médio, taxas, funil)
+- [x] Salvar dados ao editar célula (debounce de 500ms)
+- [x] Linha de totais/médias no rodapé da planilha
 
 FALTA:
-- [ ] CRUD de perpétuos (criar, editar nome, excluir com confirmação)
-- [ ] Tela de listagem de perpétuos com cards
-- [ ] Tela interna do perpétuo com lista de planilhas (mês/ano)
-- [ ] Criar planilha: selecionar mês/ano, definir nomes dos OBs/upsell/downsell
-- [ ] Pré-criar daily_entries ao criar planilha
-- [ ] Interface tipo spreadsheet: grid editável com todas as colunas de métricas
-- [ ] Cálculos automáticos no frontend (faturamento total, lucro, margem, CPA, ticket médio, taxas, funil)
-- [ ] Salvar dados ao editar célula (debounce de 500ms)
-- [ ] Linha de totais/médias no rodapé da planilha
 - [ ] Testes manuais do fluxo completo de preenchimento
 
 ---
