@@ -1,36 +1,36 @@
 # Progress — PerpetuoHQ
 
 ## Status geral
-MILESTONE ATUAL: 1 — Fundação
+MILESTONE ATUAL: 2 — Core (Perpétuos + Planilhas)
 INÍCIO: Março 2026
-ÚLTIMA SESSÃO: —
+ÚLTIMA SESSÃO: 2026-03-27
 
 ---
 
-## Milestone 1 — Fundação
+## Milestone 1 — Fundação ✅
 **Objetivo:** Auth + layout base + banco configurado + deploy em staging
 **Entregável:** Head e Gestor conseguem criar conta, logar e ver o dashboard vazio com sidebar navegável
 
 FEITO:
-- (vazio — preencher conforme implementar)
-
-FALTA:
-- [ ] Inicializar projeto Next.js 14 App Router + TypeScript strict + Tailwind + shadcn/ui
-- [ ] Configurar Supabase (criar projeto, env vars, client/server configs)
-- [ ] Criar tabelas do schema.md no Supabase (users, perpetuos, perpetuo_access, planilhas, daily_entries)
-- [ ] Ativar RLS em todas as tabelas e configurar políticas
-- [ ] Auth completa com Supabase Auth (cadastro + login + logout + middleware de proteção)
-- [ ] Layout base: sidebar com navegação (Dashboard, Perpétuos, Gestores, Config) + header com avatar/logout
-- [ ] Configurar Supabase Storage para upload de avatares
-- [ ] Aplicar design system (cores, fontes, componentes base)
-- [ ] Deploy na Vercel + variáveis de ambiente configuradas
-- [ ] Testar login em staging
+- [x] Inicializar projeto Next.js 14 App Router + TypeScript strict + Tailwind + shadcn/ui
+- [x] Configurar Supabase (criar projeto, env vars, client/server configs)
+- [x] Criar tabelas do schema.md no Supabase (users, perpetuos, perpetuo_access, planilhas, daily_entries)
+- [x] Ativar RLS em todas as tabelas e configurar políticas
+- [x] Auth completa com Supabase Auth (cadastro + login + logout + middleware de proteção)
+- [x] Layout base: sidebar com navegação (Dashboard, Perpétuos, Gestores, Config) + header com avatar/logout
+- [x] Configurar Supabase Storage para upload de avatares
+- [x] Aplicar design system (cores, fontes, componentes base)
+- [x] Deploy na Vercel + variáveis de ambiente configuradas
+- [x] Testar login em staging
 
 ---
 
 ## Milestone 2 — Core (Perpétuos + Planilhas)
 **Objetivo:** CRUD de perpétuos, criação de planilhas mensais e preenchimento de dados diários
 **Entregável:** Gestor consegue acessar um perpétuo, criar planilha do mês e preencher dados diários com cálculos automáticos funcionando
+
+FEITO:
+- (preencher conforme implementar)
 
 FALTA:
 - [ ] CRUD de perpétuos (criar, editar nome, excluir com confirmação)
@@ -65,13 +65,12 @@ FALTA:
 ---
 
 ## Decisões técnicas
-(Preencher conforme o projeto evolui — decisões que a IA NÃO deve reverter)
-
 - Valores monetários em centavos (integer) no banco, exibidos como R$ na interface
 - Campos calculados NÃO armazenados no banco — calculados no frontend
 - Ao criar planilha, pré-criar todas as daily_entries do mês (facilita grid)
 - Design system fixo: Navy + Gold + White conforme design-system.md
 - Supabase Auth com email/password (sem OAuth)
+- Zod para validação de inputs em todas as Server Actions
 
 ---
 
