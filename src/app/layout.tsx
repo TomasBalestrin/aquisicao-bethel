@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Toaster } from "sonner";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -31,6 +32,7 @@ export default function RootLayout({
     <html lang="pt-BR" className={cn(plusJakarta.variable, jetbrainsMono.variable)}>
       <body className="font-sans antialiased">
         {children}
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );
