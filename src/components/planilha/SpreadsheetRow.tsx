@@ -69,7 +69,7 @@ export const SpreadsheetRow = memo(function SpreadsheetRow({ entry, columns, onU
 
         if (col.key === "data") {
           return (
-            <td key={col.key} className="border-r border-gray-200 px-2 py-1.5 font-sans text-[12px] font-medium text-navy-70">
+            <td key={col.key} className="border-r border-gray-200 px-2 py-1.5 font-mono text-[12px] font-medium text-navy-70">
               {formatDate(entry.data)}
             </td>
           );
@@ -77,7 +77,7 @@ export const SpreadsheetRow = memo(function SpreadsheetRow({ entry, columns, onU
         if (!col.editable) {
           const val = getCalcValue(entry, col.key);
           return (
-            <td key={col.key} className={`border-r border-gray-200 ${cellBg} px-2 py-1.5 font-sans text-[12px] tabular-nums ${dynColor(col.key, val)}`}>
+            <td key={col.key} className={`border-r border-gray-200 ${cellBg} px-2 py-1.5 font-mono text-[12px] tabular-nums ${dynColor(col.key, val)}`}>
               {formatCalc(val, col)}
             </td>
           );

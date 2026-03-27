@@ -90,11 +90,12 @@
 
 | Tipo       | Família             | Uso                                          |
 |------------|---------------------|----------------------------------------------|
-| Única      | **Poppins** | Headlines, body, labels, botões, valores numéricos |
+| Primária   | **Plus Jakarta Sans** | Headlines, body, labels, botões            |
+| Monospace  | **JetBrains Mono**    | Valores numéricos na planilha e dashboard  |
 
 **CDN:**
 ```html
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 ```
 
 ### Escala Tipográfica
@@ -109,14 +110,14 @@
 | Body        | 14px    | 400  | 1.6         | 0         | Parágrafos, descrições       |
 | Small       | 12px    | 500  | 1.5         | 0         | Metadados, timestamps        |
 | Overline    | 11px    | 700  | 1.4         | 1.5px     | Labels de categoria (UPPERCASE) |
-| Code        | 13px    | 400  | 1.5         | 0         | Código, valores numéricos (Poppins) |
+| Code        | 13px    | 400  | 1.5         | 0         | Valores numéricos (JetBrains Mono) |
 
 ### Exemplo de CSS
 
 ```css
 /* Display */
 .display {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 48px;
   font-weight: 800;
   line-height: 1.1;
@@ -126,7 +127,7 @@
 
 /* Body */
 .body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.6;
@@ -135,7 +136,7 @@
 
 /* Overline / Label */
 .overline {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -145,7 +146,7 @@
 
 /* Code */
 .code {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 13px;
   font-weight: 400;
   color: var(--navy-70);
@@ -263,7 +264,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -416,7 +417,7 @@ Label de contexto                75%
 
 - Header: `display: flex; justify-content: space-between`
 - Label: 13px, weight 600
-- Value: Poppins, 12px, navy-50
+- Value: JetBrains Mono, 12px, navy-50
 
 ### Circular
 
@@ -465,7 +466,7 @@ Done   Done  Active Pending
 .form-input {
   width: 100%;
   padding: 10px 14px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 13.5px;
   border: 1.5px solid var(--gray-300);
   border-radius: var(--radius-sm);     /* 6px */
@@ -656,8 +657,8 @@ Copie e cole este bloco na raiz do seu projeto:
   --shadow-xl: 0 16px 50px rgba(0, 19, 33, 0.16);
 
   /* === TIPOGRAFIA === */
-  --font-primary: 'Poppins', sans-serif;
-  --font-mono: 'Poppins', sans-serif;
+  --font-primary: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 ```
 
@@ -705,6 +706,24 @@ Copie e cole este bloco na raiz do seu projeto:
 
 ---
 
-> **Design System v1.2** — Atualizado em Março 2026
-> Fonte primária: Poppins. Cores pastel por categoria nas colunas.
-> Ocultar/exibir colunas com persistência. Duplicar planilha.
+## Ícones de Ação nos Cards de Planilha
+
+Na página do perpétuo, cada card de planilha exibe uma row de ícones:
+
+| Ícone | Lucide | Ação | Hover |
+|-------|--------|------|-------|
+| Abrir | `external-link` | Navega para a planilha | Gold |
+| Duplicar | `copy` | Abre modal de duplicação | Gold |
+| Editar | `pencil` | Abre modal de edição dos nomes OBs | Gold |
+| Excluir | `trash-2` | Abre dialog de confirmação | Vermelho |
+
+- Tamanho: 18px, `stroke-width: 2`
+- Gap: 8px entre ícones
+- Alinhados à direita no card
+- Atributo `title` em cada ícone para tooltip nativo
+
+---
+
+> **Design System v1.3** — Atualizado em Março 2026
+> Fonte primária: Plus Jakarta Sans. Mono: JetBrains Mono.
+> Cores pastel por categoria. Ícones de ação nos cards de planilha.

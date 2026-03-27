@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
-const poppins = localFont({
-  src: [
-    { path: "./fonts/poppins-latin-300-normal.woff2", weight: "300" },
-    { path: "./fonts/poppins-latin-400-normal.woff2", weight: "400" },
-    { path: "./fonts/poppins-latin-500-normal.woff2", weight: "500" },
-    { path: "./fonts/poppins-latin-600-normal.woff2", weight: "600" },
-    { path: "./fonts/poppins-latin-700-normal.woff2", weight: "700" },
-    { path: "./fonts/poppins-latin-800-normal.woff2", weight: "800" },
-  ],
-  variable: "--font-poppins",
+const plusJakarta = localFont({
+  src: "./fonts/plus-jakarta-sans-latin-wght-normal.woff2",
+  variable: "--font-plus-jakarta",
   display: "swap",
+  weight: "300 800",
+});
+
+const jetbrainsMono = localFont({
+  src: "./fonts/jetbrains-mono-latin-wght-normal.woff2",
+  variable: "--font-jetbrains",
+  display: "swap",
+  weight: "400 500",
 });
 
 export const metadata: Metadata = {
@@ -27,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={poppins.variable}>
+    <html lang="pt-BR" className={cn(plusJakarta.variable, jetbrainsMono.variable)}>
       <body className="font-sans antialiased">
         {children}
         <Toaster position="top-right" richColors />

@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, FileSpreadsheet, Plus, Trash2, Copy, Settings } from "lucide-react";
+import { ArrowLeft, FileSpreadsheet, Plus, Trash2, Copy, Pencil, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
+import { Modal } from "@/components/ui/Modal";
+import { AlertTriangle } from "lucide-react";
 import { CreatePlanilhaDialog } from "@/components/planilha/CreatePlanilhaDialog";
 import { DuplicatePlanilhaDialog } from "@/components/planilha/DuplicatePlanilhaDialog";
 import { EditNomesDialog } from "@/components/planilha/EditNomesDialog";
@@ -32,16 +34,21 @@ const MESES = [
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
-const btnCls = "flex items-center gap-1.5 rounded-[6px] px-3 py-[7px] text-[12px] font-semibold transition-colors";
+const iconBtn = "flex h-8 w-8 items-center justify-center rounded-md transition-colors";
 
 export function PerpetuoDetail({ perpetuoId, perpetuoName, planilhas }: Props) {
   const [showCreate, setShowCreate] = useState(false);
   const [dupTarget, setDupTarget] = useState<Planilha | null>(null);
   const [editTarget, setEditTarget] = useState<Planilha | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Planilha | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
-  async function handleDelete(planilhaId: string) {
-    const result = await deletePlanilha(planilhaId, perpetuoId);
-    if (result.success) toast.success("Planilha excluída");
+  async function handleDelete() {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    const result = await deletePlanilha(deleteTarget.id, perpetuoId);
+    setDeleting(false);
+    if (result.success) { toast.success("Planilha excluída"); setDeleteTarget(null); }
     else toast.error(result.error ?? "Erro ao excluir");
   }
 
@@ -71,22 +78,22 @@ export function PerpetuoDetail({ perpetuoId, perpetuoName, planilhas }: Props) {
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {planilhas.map((p) => (
             <div key={p.id} className="rounded-lg border border-gray-200 bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
-              <Link href={`/perpetuos/${perpetuoId}/planilha/${p.id}`} className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <FileSpreadsheet size={18} strokeWidth={2} className="text-gold" />
                 <h3 className="text-[15px] font-semibold text-navy-dark">{MESES[p.mes]} {p.ano}</h3>
-              </Link>
-              <div className="mt-3 flex flex-wrap gap-1 border-t border-gray-200 pt-2">
-                <button onClick={() => setDupTarget(p)} className={`${btnCls} text-navy-dark hover:bg-navy-05`}>
-                  <Copy size={14} strokeWidth={2} />
-                  Duplicar
+              </div>
+              <div className="mt-3 flex items-center justify-end gap-2 border-t border-gray-200 pt-3">
+                <Link href={`/perpetuos/${perpetuoId}/planilha/${p.id}`} className={`${iconBtn} text-navy-50 hover:bg-navy-05 hover:text-gold`} title="Abrir">
+                  <ExternalLink size={18} strokeWidth={2} />
+                </Link>
+                <button onClick={() => setDupTarget(p)} className={`${iconBtn} text-navy-50 hover:bg-navy-05 hover:text-gold`} title="Duplicar">
+                  <Copy size={18} strokeWidth={2} />
                 </button>
-                <button onClick={() => setEditTarget(p)} className={`${btnCls} text-gold hover:bg-gold-lightest`}>
-                  <Settings size={14} strokeWidth={2} />
-                  Nomes
+                <button onClick={() => setEditTarget(p)} className={`${iconBtn} text-navy-50 hover:bg-navy-05 hover:text-gold`} title="Editar">
+                  <Pencil size={18} strokeWidth={2} />
                 </button>
-                <button onClick={() => handleDelete(p.id)} className={`${btnCls} text-error hover:bg-[#FFEBEE]`}>
-                  <Trash2 size={14} strokeWidth={2} />
-                  Excluir
+                <button onClick={() => setDeleteTarget(p)} className={`${iconBtn} text-navy-50 hover:bg-[#FFEBEE] hover:text-error`} title="Excluir">
+                  <Trash2 size={18} strokeWidth={2} />
                 </button>
               </div>
             </div>
@@ -95,26 +102,26 @@ export function PerpetuoDetail({ perpetuoId, perpetuoName, planilhas }: Props) {
       )}
 
       <CreatePlanilhaDialog open={showCreate} onClose={() => setShowCreate(false)} perpetuoId={perpetuoId} />
+      {dupTarget && <DuplicatePlanilhaDialog open onClose={() => setDupTarget(null)} planilhaId={dupTarget.id} perpetuoId={perpetuoId} currentMes={dupTarget.mes} currentAno={dupTarget.ano} />}
+      {editTarget && <EditNomesDialog open onClose={() => setEditTarget(null)} planilhaId={editTarget.id} perpetuoId={perpetuoId} nomes={{ ob1_nome: editTarget.ob1_nome, ob2_nome: editTarget.ob2_nome, ob3_nome: editTarget.ob3_nome, ob4_nome: editTarget.ob4_nome, ob5_nome: editTarget.ob5_nome, upsell_nome: editTarget.upsell_nome, downsell_nome: editTarget.downsell_nome }} />}
 
-      {dupTarget && (
-        <DuplicatePlanilhaDialog
-          open onClose={() => setDupTarget(null)}
-          planilhaId={dupTarget.id} perpetuoId={perpetuoId}
-          currentMes={dupTarget.mes} currentAno={dupTarget.ano}
-        />
-      )}
-
-      {editTarget && (
-        <EditNomesDialog
-          open onClose={() => setEditTarget(null)}
-          planilhaId={editTarget.id} perpetuoId={perpetuoId}
-          nomes={{
-            ob1_nome: editTarget.ob1_nome, ob2_nome: editTarget.ob2_nome,
-            ob3_nome: editTarget.ob3_nome, ob4_nome: editTarget.ob4_nome,
-            ob5_nome: editTarget.ob5_nome,
-            upsell_nome: editTarget.upsell_nome, downsell_nome: editTarget.downsell_nome,
-          }}
-        />
+      {deleteTarget && (
+        <Modal open onClose={() => setDeleteTarget(null)} title="Excluir Planilha">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start gap-3 rounded-[6px] bg-[#FFEBEE] p-[14px]">
+              <AlertTriangle size={18} strokeWidth={2} className="mt-0.5 shrink-0 text-error" />
+              <p className="text-[13px] text-error">
+                Ao excluir <strong>{MESES[deleteTarget.mes]} {deleteTarget.ano}</strong>, todos os dados diários serão removidos permanentemente.
+              </p>
+            </div>
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setDeleteTarget(null)} className="rounded-[6px] px-[22px] py-[10px] text-[13.5px] font-semibold text-navy-dark transition-colors hover:bg-navy-05">Cancelar</button>
+              <button onClick={handleDelete} disabled={deleting} className="rounded-[6px] bg-error px-[22px] py-[10px] text-[13.5px] font-semibold text-white transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40">
+                {deleting ? "Excluindo..." : "Excluir"}
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </>
   );

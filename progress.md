@@ -69,6 +69,11 @@ FEITO:
 - [x] Botão "Mostrar Colunas" para revelar todas as colunas ocultas
 - [x] Duplicar planilha: copia nomes dos OBs, sugere próximo mês, valores zerados
 - [x] Toolbar unificada: Mostrar Colunas + Duplicar + Exportar PDF
+- [x] Botões duplicar e editar nomes OBs nos cards de planilha
+- [x] Reverter fonte para Plus Jakarta Sans (body) + JetBrains Mono (valores numéricos)
+- [x] Cards de planilha com ícones de ação: Abrir, Duplicar, Editar, Excluir
+- [x] Dialog de confirmação para excluir planilha
+- [x] Atualizar design-system.md (v1.3: ícones de ação, fontes corrigidas)
 
 ---
 
@@ -77,7 +82,8 @@ FEITO:
 - Campos calculados NÃO armazenados no banco
 - Pré-criar daily_entries ao criar planilha
 - Design system: Navy + Gold + White
-- Font primária: Poppins (substituiu Plus Jakarta Sans)
+- Font primária: Plus Jakarta Sans (body, labels, botões)
+- Font mono: JetBrains Mono (valores numéricos na planilha e dashboard)
 - Supabase Auth com email/password (sem OAuth)
 - Zod para validação em todas as Server Actions
 - Admin client com SERVICE_ROLE_KEY para gestão de usuários
