@@ -78,7 +78,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-primary)"],
-        mono: ["var(--font-primary)"],
+        mono: ["var(--font-mono)"],
       },
       borderRadius: {
         sm: "6px",
