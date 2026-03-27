@@ -1,7 +1,7 @@
 # Progress — PerpetuoHQ
 
 ## Status geral
-MILESTONE ATUAL: 2 — Core (Perpétuos + Planilhas)
+MILESTONE ATUAL: 3 — Gestores + Dashboard + PDF
 INÍCIO: Março 2026
 ÚLTIMA SESSÃO: 2026-03-27
 
@@ -25,7 +25,7 @@ FEITO:
 
 ---
 
-## Milestone 2 — Core (Perpétuos + Planilhas)
+## Milestone 2 — Core (Perpétuos + Planilhas) ✅
 **Objetivo:** CRUD de perpétuos, criação de planilhas mensais e preenchimento de dados diários
 **Entregável:** Gestor consegue acessar um perpétuo, criar planilha do mês e preencher dados diários com cálculos automáticos funcionando
 
@@ -39,9 +39,7 @@ FEITO:
 - [x] Cálculos automáticos no frontend (faturamento total, lucro, margem, CPA, ticket médio, taxas, funil)
 - [x] Salvar dados ao editar célula (debounce de 500ms)
 - [x] Linha de totais/médias no rodapé da planilha
-
-FALTA:
-- [ ] Testes manuais do fluxo completo de preenchimento
+- [x] Testes manuais do fluxo completo de preenchimento
 
 ---
 
@@ -49,11 +47,13 @@ FALTA:
 **Objetivo:** Controle de acesso por gestor, dashboard com filtros e exportação PDF
 **Entregável:** Sistema completo com Head gerenciando gestores, dashboard consolidado e relatório PDF
 
+FEITO:
+- [x] CRUD de gestores (criar com email/senha/foto, editar, excluir)
+- [x] Upload de foto de perfil via Supabase Storage
+- [x] Tela de concessão de acesso: selecionar quais perpétuos cada gestor vê
+- [x] Filtrar perpétuos visíveis no frontend baseado em perpetuo_access
+
 FALTA:
-- [ ] CRUD de gestores (criar com email/senha/foto, editar, excluir)
-- [ ] Upload de foto de perfil via Supabase Storage
-- [ ] Tela de concessão de acesso: selecionar quais perpétuos cada gestor vê
-- [ ] Filtrar perpétuos visíveis no frontend baseado em perpetuo_access
 - [ ] Dashboard: cards de métricas (investido, faturamento, lucro, margem, CPA, ticket médio)
 - [ ] Dashboard: filtro por perpétuo e por período (data início / data fim)
 - [ ] Dashboard: gráfico de evolução (linha do tempo de faturamento/lucro)
