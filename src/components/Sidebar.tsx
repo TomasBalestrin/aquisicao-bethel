@@ -33,6 +33,7 @@ export function Sidebar({ userName, userRole }: SidebarProps) {
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, String(collapsed));
+    window.dispatchEvent(new CustomEvent("sidebar-toggle", { detail: { collapsed } }));
   }, [collapsed]);
 
   const w = collapsed ? "w-[72px]" : "w-[260px]";

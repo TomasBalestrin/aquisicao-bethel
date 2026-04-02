@@ -1,47 +1,19 @@
 "use client";
 
-import { memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import type { DailyEntryRow } from "@/types/daily-entry";
 import type { ColumnDef } from "./columnDefs";
 import { GROUP_COLORS } from "./columnDefs";
 import { EditableCell } from "./EditableCell";
 import {
-  calcFaturamentoTotal, calcLucro, calcMargem, calcCpa, calcTicketMedio,
-  calcVendasPrincipal, calcFatPrincipal, calcTotalFunil, calcCarregamento,
-  safeDivide, centsToBrl,
+  calcFaturamentoTotal, calcVendasPrincipal, calcFatPrincipal,
+  calcTotalFunil, calcCarregamento, safeDivide, centsToBrl,
 } from "@/lib/utils/calcMetrics";
 
 interface Props {
   entry: DailyEntryRow;
   columns: ColumnDef[];
   onUpdate: (entryId: string, field: string, value: number) => void;
-}
-
-function getCalcValue(e: DailyEntryRow, key: string): number | null {
-  const vp = calcVendasPrincipal(e);
-  switch (key) {
-    case "fat_total": return calcFaturamentoTotal(e);
-    case "lucro": return calcLucro(e);
-    case "margem": return calcMargem(e);
-    case "cpa": return calcCpa(e);
-    case "ticket_medio": return calcTicketMedio(e);
-    case "vendas_principal": return vp;
-    case "fat_principal": return calcFatPrincipal(e);
-    case "total_funil": return calcTotalFunil(e);
-    case "calc_carregamento": return calcCarregamento(e);
-    case "ob1_taxa": return safeDivide(e.ob1_vendas * 100, vp);
-    case "ob2_taxa": return safeDivide(e.ob2_vendas * 100, vp);
-    case "ob3_taxa": return safeDivide(e.ob3_vendas * 100, vp);
-    case "ob4_taxa": return safeDivide(e.ob4_vendas * 100, vp);
-    case "ob5_taxa": return safeDivide(e.ob5_vendas * 100, vp);
-    case "ob6_taxa": return safeDivide(e.ob6_vendas * 100, vp);
-    case "upsell_taxa": return safeDivide(e.upsell_vendas * 100, vp);
-    case "downsell_taxa": return safeDivide(e.downsell_vendas * 100, vp);
-    case "conv_pag_check": return safeDivide(e.initiate_checkout * 100, e.page_view);
-    case "conv_check_compra": return safeDivide(vp * 100, e.initiate_checkout);
-    case "conv_pag_compra": return safeDivide(vp * 100, e.page_view);
-    default: return null;
-  }
 }
 
 function dynColor(key: string, val: number | null): string {
@@ -71,6 +43,32 @@ export const SpreadsheetRow = memo(function SpreadsheetRow({ entry, columns, onU
     [entry.id, onUpdate]
   );
 
+  const calc = useMemo(() => {
+    const vp = calcVendasPrincipal(entry);
+    const fp = calcFatPrincipal(entry);
+    const tf = calcTotalFunil(entry);
+    const ft = calcFaturamentoTotal(entry);
+    const lucro = ft - entry.investimento;
+    const margem = ft === 0 ? null : (lucro / ft) * 100;
+    return {
+      fat_total: ft, lucro, margem, vendas_principal: vp, fat_principal: fp, total_funil: tf,
+      cpa: safeDivide(entry.investimento, vp),
+      ticket_medio: safeDivide(ft, vp),
+      calc_carregamento: calcCarregamento(entry),
+      ob1_taxa: safeDivide(entry.ob1_vendas * 100, vp),
+      ob2_taxa: safeDivide(entry.ob2_vendas * 100, vp),
+      ob3_taxa: safeDivide(entry.ob3_vendas * 100, vp),
+      ob4_taxa: safeDivide(entry.ob4_vendas * 100, vp),
+      ob5_taxa: safeDivide(entry.ob5_vendas * 100, vp),
+      ob6_taxa: safeDivide(entry.ob6_vendas * 100, vp),
+      upsell_taxa: safeDivide(entry.upsell_vendas * 100, vp),
+      downsell_taxa: safeDivide(entry.downsell_vendas * 100, vp),
+      conv_pag_check: safeDivide(entry.initiate_checkout * 100, entry.page_view),
+      conv_check_compra: safeDivide(vp * 100, entry.initiate_checkout),
+      conv_pag_compra: safeDivide(vp * 100, entry.page_view),
+    } as Record<string, number | null>;
+  }, [entry]);
+
   return (
     <tr className="border-b border-gray-200">
       {columns.map((col) => {
@@ -85,7 +83,7 @@ export const SpreadsheetRow = memo(function SpreadsheetRow({ entry, columns, onU
           );
         }
         if (!col.editable) {
-          const val = getCalcValue(entry, col.key);
+          const val = calc[col.key] ?? null;
           return (
             <td key={col.key} className={`border-r border-gray-200 ${cellBg} px-2 py-1.5 font-table text-[12px] tabular-nums ${dynColor(col.key, val)}`}>
               {fmtCalc(val, col)}

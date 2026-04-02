@@ -29,7 +29,7 @@ export async function getGestores(): Promise<ActionResponseWithData<GestorRow[]>
   const supabase = createClient();
   const { data, error } = await supabase
     .from("users")
-    .select("*")
+    .select("id, email, name, avatar_url, role, created_at")
     .eq("role", "gestor")
     .order("created_at", { ascending: false });
 

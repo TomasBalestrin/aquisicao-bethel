@@ -112,6 +112,7 @@ FEITO:
 - vendas_principal e faturamento_principal são calculados (soma das plataformas)
 - Colunas plat1-5 substituem faturamento_principal/vendas_principal no banco
 - carregamento é calculado (page_view / cliques_link), não armazenado
+- Dashboard usa fetch client-side via Server Action (useEffect) porque os filtros são interativos — justificável conforme CLAUDE.md
 
 ---
 
@@ -120,6 +121,4 @@ FEITO:
 FEITO:
 - [x] Etapa 1: limpeza estrutural (arquivos mortos, duplicações, código morto)
 - [x] Etapa 2: bugs corrigidos, validação Zod, schema.md atualizado
-
-FALTA:
-- [ ] Etapa 3: otimizações de performance
+- [x] Etapa 3: otimizações de performance (custom event sidebar, cache cálculos, select específico)

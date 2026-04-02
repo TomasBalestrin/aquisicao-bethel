@@ -24,7 +24,7 @@ export async function getPerpetuos(): Promise<ActionResponseWithData<PerpetuoRow
   const supabase = createClient();
   const { data, error } = await supabase
     .from("perpetuos")
-    .select("*")
+    .select("id, name, created_by, created_at, updated_at")
     .order("created_at", { ascending: false });
 
   if (error) return { success: false, error: "Erro ao buscar perpétuos" };
@@ -46,7 +46,7 @@ export async function createPerpetuo(formData: FormData): Promise<ActionResponse
   const { data, error } = await supabase
     .from("perpetuos")
     .insert({ name: parsed.data.name, created_by: user.id })
-    .select("*")
+    .select("id, name, created_by, created_at, updated_at")
     .single();
 
   if (error) return { success: false, error: "Erro ao criar perpétuo" };
