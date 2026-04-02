@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import type { DailyEntryRow } from "@/types/daily-entry";
 import {
   calcFaturamentoTotal, calcVendasPrincipal, safeDivide, centsToBrl,
@@ -9,47 +10,64 @@ interface Props {
   entries: DailyEntryRow[];
 }
 
-function formatVal(cents: number): string {
+function fmtVal(cents: number): string {
   return `R$ ${centsToBrl(cents)}`;
 }
 
-function formatPct(val: number | null): string {
+function fmtPct(val: number | null): string {
   if (val === null) return "—";
   return `${val.toFixed(1).replace(".", ",")}%`;
 }
 
 export function PlanilhaKPIs({ entries }: Props) {
-  const investimento = entries.reduce((a, e) => a + e.investimento, 0);
-  const faturamento = entries.reduce((a, e) => a + calcFaturamentoTotal(e), 0);
-  const vendas = entries.reduce((a, e) => a + calcVendasPrincipal(e), 0);
-  const lucro = faturamento - investimento;
-  const margem = safeDivide(lucro * 100, faturamento);
-  const cpa = safeDivide(investimento, vendas);
-  const ticket = safeDivide(faturamento, vendas);
+  const data = useMemo(() => {
+    const inv = entries.reduce((a, e) => a + e.investimento, 0);
+    const fat = entries.reduce((a, e) => a + calcFaturamentoTotal(e), 0);
+    const vd = entries.reduce((a, e) => a + calcVendasPrincipal(e), 0);
+    const lucro = fat - inv;
+    return {
+      inv, fat, lucro,
+      margem: safeDivide(lucro * 100, fat),
+      cpa: safeDivide(inv, vd),
+      ticket: safeDivide(fat, vd),
+    };
+  }, [entries]);
 
-  const hasData = investimento > 0 || faturamento > 0;
-  const lucroColor = lucro > 0 ? "text-success" : lucro < 0 ? "text-error" : "text-navy-dark";
-  const margemColor = margem !== null && margem > 0 ? "text-success" : margem !== null && margem < 0 ? "text-error" : "text-navy-dark";
+  const has = data.inv > 0 || data.fat > 0;
+  const lcCl = data.lucro > 0 ? "text-success" : data.lucro < 0 ? "text-error" : "text-navy-dark";
+  const mgCl = data.margem !== null && data.margem > 0 ? "text-success" : data.margem !== null && data.margem < 0 ? "text-error" : "text-navy-dark";
 
   const kpis = [
-    { label: "Investimento", value: hasData ? formatVal(investimento) : "—", color: "text-navy-dark" },
-    { label: "Faturamento", value: hasData ? formatVal(faturamento) : "—", color: "text-navy-dark" },
-    { label: "Lucro", value: hasData ? formatVal(lucro) : "—", color: lucroColor },
-    { label: "Margem", value: hasData ? formatPct(margem) : "—", color: margemColor },
-    { label: "CPA", value: hasData && cpa !== null ? formatVal(cpa) : "—", color: "text-navy-dark" },
-    { label: "Ticket Médio", value: hasData && ticket !== null ? formatVal(ticket) : "—", color: "text-navy-dark" },
+    { label: "INVESTIMENTO", value: has ? fmtVal(data.inv) : "—", color: "text-navy-dark" },
+    { label: "FATURAMENTO", value: has ? fmtVal(data.fat) : "—", color: "text-navy-dark" },
+    { label: "LUCRO", value: has ? fmtVal(data.lucro) : "—", color: lcCl },
+    { label: "MARGEM", value: has ? fmtPct(data.margem) : "—", color: mgCl },
+    { label: "CPA", value: has && data.cpa !== null ? fmtVal(data.cpa) : "—", color: "text-navy-dark" },
+    { label: "TICKET MÉDIO", value: has && data.ticket !== null ? fmtVal(data.ticket) : "—", color: "text-navy-dark" },
   ];
 
   return (
-    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
-      {kpis.map((kpi) => (
-        <div key={kpi.label} className="rounded-lg border border-gray-200 bg-white p-5">
-          <p className="text-[12px] font-semibold text-navy-70">{kpi.label}</p>
-          <p className={`mt-1 font-mono text-[22px] font-extrabold tracking-[-0.5px] ${kpi.color}`}>
-            {kpi.value}
-          </p>
-        </div>
-      ))}
-    </div>
+    <>
+      {/* Mobile: horizontal cards */}
+      <div className="flex flex-wrap gap-3 md:hidden">
+        {kpis.map((k) => (
+          <div key={k.label} className="flex-1 min-w-[130px] rounded-lg border border-gray-200 bg-white p-3">
+            <p className="text-[10px] font-bold uppercase tracking-[1px] text-navy-70">{k.label}</p>
+            <p className={`mt-1 font-mono text-[16px] font-extrabold ${k.color}`}>{k.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop: vertical panel (rendered inside SpreadsheetGrid flex) */}
+      <div className="hidden md:flex w-[200px] flex-shrink-0 flex-col gap-5 border-r border-gray-200 bg-white p-5">
+        <p className="text-[11px] font-bold uppercase tracking-[1.5px] text-gold">KPIs do Mês</p>
+        {kpis.map((k) => (
+          <div key={k.label}>
+            <p className="text-[10px] font-bold uppercase tracking-[1px] text-navy-70">{k.label}</p>
+            <p className={`mt-1 font-mono text-[22px] font-extrabold tracking-[-0.5px] ${k.color}`}>{k.value}</p>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

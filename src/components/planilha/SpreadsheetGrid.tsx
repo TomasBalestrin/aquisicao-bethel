@@ -53,25 +53,36 @@ export function SpreadsheetGrid({ entries: initial, planilhaId, planilha }: Prop
 
   return (
     <div className="flex flex-col gap-4">
-      <PlanilhaKPIs entries={entries} />
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
-        <table className="w-max min-w-full border-collapse">
-          <thead>
-            <tr>
-              {columns.map((col) => (
-                <HeaderCell key={col.key} col={col} onHide={hideColumn} />
+      {/* Mobile KPIs */}
+      <div className="md:hidden">
+        <PlanilhaKPIs entries={entries} />
+      </div>
+
+      {/* Desktop: KPIs left + table right */}
+      <div className="flex rounded-lg border border-gray-200">
+        {/* KPI panel (desktop only) */}
+        <PlanilhaKPIs entries={entries} />
+
+        {/* Table */}
+        <div className="flex-1 overflow-x-auto">
+          <table className="w-max min-w-full border-collapse">
+            <thead>
+              <tr>
+                {columns.map((col) => (
+                  <HeaderCell key={col.key} col={col} onHide={hideColumn} />
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {entries.map((entry) => (
+                <SpreadsheetRow key={entry.id} entry={entry} columns={columns} onUpdate={handleUpdate} />
               ))}
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((entry) => (
-              <SpreadsheetRow key={entry.id} entry={entry} columns={columns} onUpdate={handleUpdate} />
-            ))}
-          </tbody>
-          <tfoot>
-            <TotalsRow entries={entries} columns={columns} />
-          </tfoot>
-        </table>
+            </tbody>
+            <tfoot>
+              <TotalsRow entries={entries} columns={columns} />
+            </tfoot>
+          </table>
+        </div>
       </div>
     </div>
   );
@@ -79,7 +90,7 @@ export function SpreadsheetGrid({ entries: initial, planilhaId, planilha }: Prop
 
 function HeaderCell({ col, onHide }: { col: ColumnDef; onHide: (key: string) => void }) {
   const gc = GROUP_COLORS[col.group];
-  const bgClass = !col.editable && col.key !== "data" ? `bg-[#3d5a80]` : gc?.header ?? "bg-navy-dark";
+  const bgClass = !col.editable && col.key !== "data" ? "bg-[#3d5a80]" : gc?.header ?? "bg-navy-dark";
   const canHide = col.key !== "data";
 
   return (
