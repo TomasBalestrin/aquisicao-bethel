@@ -14,7 +14,7 @@ export default async function AuthLayout({
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar currentPath="" userName={user.name} userRole={user.role} />
+      <Sidebar userName={user.name} userRole={user.role} />
       <SidebarMargin>
         <Header userName={user.name} avatarUrl={user.avatar_url} />
         <main className="flex-1 bg-gray-50 p-12">

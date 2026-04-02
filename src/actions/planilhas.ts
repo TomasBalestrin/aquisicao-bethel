@@ -2,13 +2,9 @@
 
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { daysInMonth } from "@/lib/helpers";
 import { revalidatePath } from "next/cache";
-
-interface ActionResponse<T = undefined> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
+import type { ActionResponse } from "@/types/action";
 
 const n = z.string().max(50).optional();
 
@@ -22,10 +18,6 @@ const createSchema = z.object({
   plat1_nome: n, plat2_nome: n, plat3_nome: n,
   plat4_nome: n, plat5_nome: n,
 });
-
-function daysInMonth(mes: number, ano: number): number {
-  return new Date(ano, mes, 0).getDate();
-}
 
 export async function getPlanilhasByPerpetuo(perpetuoId: string) {
   const supabase = createClient();

@@ -3,12 +3,7 @@
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import type { DailyEntryRow } from "@/types/daily-entry";
-
-interface ActionResponse<T = undefined> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
+import type { ActionResponse, ActionResponseWithData } from "@/types/action";
 
 const EDITABLE_FIELDS = [
   "investimento",
@@ -33,7 +28,7 @@ const updateSchema = z.object({
 
 export async function getDailyEntries(
   planilhaId: string
-): Promise<ActionResponse<DailyEntryRow[]>> {
+): Promise<ActionResponseWithData<DailyEntryRow[]>> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("daily_entries")

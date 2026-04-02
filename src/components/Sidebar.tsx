@@ -10,7 +10,6 @@ import {
 import type { UserRole } from "@/types/database";
 
 interface SidebarProps {
-  currentPath: string;
   userName: string;
   userRole: UserRole;
 }

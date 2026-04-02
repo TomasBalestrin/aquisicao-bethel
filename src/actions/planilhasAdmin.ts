@@ -2,17 +2,9 @@
 
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { daysInMonth } from "@/lib/helpers";
 import { revalidatePath } from "next/cache";
-
-interface ActionResponse<T = undefined> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
-
-function daysInMonth(mes: number, ano: number): number {
-  return new Date(ano, mes, 0).getDate();
-}
+import type { ActionResponse, ActionResponseWithData } from "@/types/action";
 
 const dupSchema = z.object({
   planilhaId: z.string().uuid(),
@@ -22,7 +14,7 @@ const dupSchema = z.object({
 
 export async function duplicatePlanilha(
   input: z.infer<typeof dupSchema>
-): Promise<ActionResponse<{ planilhaId: string; perpetuoId: string }>> {
+): Promise<ActionResponseWithData<{ planilhaId: string; perpetuoId: string }>> {
   const parsed = dupSchema.safeParse(input);
   if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
 

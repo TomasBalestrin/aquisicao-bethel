@@ -4,16 +4,11 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "./auth";
 import { revalidatePath } from "next/cache";
+import type { ActionResponse, ActionResponseWithData } from "@/types/action";
 
 const perpetuoSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(100, "Máximo 100 caracteres"),
 });
-
-interface ActionResponse<T = undefined> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
 
 type PerpetuoRow = {
   id: string;
@@ -23,7 +18,7 @@ type PerpetuoRow = {
   updated_at: string;
 };
 
-export async function getPerpetuos(): Promise<ActionResponse<PerpetuoRow[]>> {
+export async function getPerpetuos(): Promise<ActionResponseWithData<PerpetuoRow[]>> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("perpetuos")
@@ -34,7 +29,7 @@ export async function getPerpetuos(): Promise<ActionResponse<PerpetuoRow[]>> {
   return { success: true, data: data ?? [] };
 }
 
-export async function createPerpetuo(formData: FormData): Promise<ActionResponse<PerpetuoRow>> {
+export async function createPerpetuo(formData: FormData): Promise<ActionResponseWithData<PerpetuoRow>> {
   const user = await getCurrentUser();
   if (!user || user.role !== "head") {
     return { success: false, error: "Apenas Head pode criar perpétuos" };

@@ -2,26 +2,14 @@
 
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getCurrentUser } from "./auth";
+import { assertHead } from "@/lib/helpers";
 import { revalidatePath } from "next/cache";
-
-interface ActionResponse {
-  success: boolean;
-  error?: string;
-}
+import type { ActionResponse, ActionResponseWithData } from "@/types/action";
 
 const updateSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(100),
   email: z.string().email("Email inválido"),
 });
-
-async function assertHead(): Promise<ActionResponse | null> {
-  const user = await getCurrentUser();
-  if (!user || user.role !== "head") {
-    return { success: false, error: "Acesso restrito ao Head" };
-  }
-  return null;
-}
 
 export async function updateGestor(
   id: string, input: { name: string; email: string }
@@ -69,7 +57,7 @@ export async function deleteGestor(id: string): Promise<ActionResponse> {
 
 export async function uploadAvatar(
   userId: string, file: File
-): Promise<ActionResponse & { data?: string }> {
+): Promise<ActionResponseWithData<string>> {
   const denied = await assertHead();
   if (denied) return denied;
 
