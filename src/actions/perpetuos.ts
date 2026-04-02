@@ -6,6 +6,8 @@ import { getCurrentUser } from "./auth";
 import { revalidatePath } from "next/cache";
 import type { ActionResponse, ActionResponseWithData } from "@/types/action";
 
+const uuidSchema = z.string().uuid("ID inválido");
+
 const perpetuoSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(100, "Máximo 100 caracteres"),
 });
@@ -53,6 +55,8 @@ export async function createPerpetuo(formData: FormData): Promise<ActionResponse
 }
 
 export async function updatePerpetuo(id: string, formData: FormData): Promise<ActionResponse> {
+  if (!uuidSchema.safeParse(id).success) return { success: false, error: "ID inválido" };
+
   const user = await getCurrentUser();
   if (!user || user.role !== "head") {
     return { success: false, error: "Apenas Head pode editar perpétuos" };
@@ -75,6 +79,8 @@ export async function updatePerpetuo(id: string, formData: FormData): Promise<Ac
 }
 
 export async function deletePerpetuo(id: string): Promise<ActionResponse> {
+  if (!uuidSchema.safeParse(id).success) return { success: false, error: "ID inválido" };
+
   const user = await getCurrentUser();
   if (!user || user.role !== "head") {
     return { success: false, error: "Apenas Head pode excluir perpétuos" };

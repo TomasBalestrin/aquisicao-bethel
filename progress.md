@@ -101,7 +101,8 @@ FEITO:
 - Pré-criar daily_entries ao criar planilha
 - Design system: Navy + Gold + White
 - Font primária: Plus Jakarta Sans (body, labels, botões)
-- Font mono: JetBrains Mono (valores numéricos na planilha e dashboard)
+- Font tabela: Poppins (dados da planilha, headers de colunas, totais, células)
+- Font mono: JetBrains Mono (valores numéricos no dashboard)
 - Supabase Auth com email/password (sem OAuth)
 - Zod para validação em todas as Server Actions
 - Admin client com SERVICE_ROLE_KEY para gestão de usuários
@@ -109,3 +110,16 @@ FEITO:
 - 6 Order Bumps (expandido de 5)
 - Carregamento agora é calculado (page_view / cliques_link)
 - vendas_principal e faturamento_principal são calculados (soma das plataformas)
+- Colunas plat1-5 substituem faturamento_principal/vendas_principal no banco
+- carregamento é calculado (page_view / cliques_link), não armazenado
+
+---
+
+## Pós-MVP — Auditoria (Abril 2026)
+
+FEITO:
+- [x] Etapa 1: limpeza estrutural (arquivos mortos, duplicações, código morto)
+- [x] Etapa 2: bugs corrigidos, validação Zod, schema.md atualizado
+
+FALTA:
+- [ ] Etapa 3: otimizações de performance

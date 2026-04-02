@@ -6,6 +6,8 @@ import { assertHead } from "@/lib/helpers";
 import { revalidatePath } from "next/cache";
 import type { ActionResponse, ActionResponseWithData } from "@/types/action";
 
+const uuidSchema = z.string().uuid("ID inválido");
+
 const updateSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(100),
   email: z.string().email("Email inválido"),
@@ -14,6 +16,8 @@ const updateSchema = z.object({
 export async function updateGestor(
   id: string, input: { name: string; email: string }
 ): Promise<ActionResponse> {
+  if (!uuidSchema.safeParse(id).success) return { success: false, error: "ID inválido" };
+
   const denied = await assertHead();
   if (denied) return denied;
 
@@ -41,6 +45,8 @@ export async function updateGestor(
 }
 
 export async function deleteGestor(id: string): Promise<ActionResponse> {
+  if (!uuidSchema.safeParse(id).success) return { success: false, error: "ID inválido" };
+
   const denied = await assertHead();
   if (denied) return denied;
 
