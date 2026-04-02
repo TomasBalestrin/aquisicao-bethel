@@ -14,42 +14,42 @@ interface Props {
 }
 
 const s = StyleSheet.create({
-  page: { padding: 30, fontSize: 7, fontFamily: "Helvetica" },
-  header: { marginBottom: 16 },
-  title: { fontSize: 16, fontWeight: "bold", color: "#001321" },
-  subtitle: { fontSize: 10, color: "#002C4A", marginTop: 4 },
+  page: { padding: 24, fontSize: 6, fontFamily: "Helvetica" },
+  header: { marginBottom: 12 },
+  title: { fontSize: 14, fontWeight: "bold", color: "#001321" },
+  subtitle: { fontSize: 9, color: "#002C4A", marginTop: 3 },
   table: { width: "100%" },
   headRow: { flexDirection: "row", backgroundColor: "#001321" },
-  headCell: { color: "#FFFFFF", padding: 4, fontWeight: "bold", fontSize: 6, width: "7.7%" },
+  headCell: { color: "#FFF", padding: 3, fontWeight: "bold", fontSize: 5, width: "8.3%" },
   row: { flexDirection: "row", borderBottomWidth: 0.5, borderBottomColor: "#E9ECEF" },
-  cell: { padding: 4, fontSize: 6, color: "#001321", width: "7.7%" },
-  calcCell: { padding: 4, fontSize: 6, color: "#002C4A", width: "7.7%", backgroundColor: "#F8F9FA" },
+  cell: { padding: 3, fontSize: 5, color: "#001321", width: "8.3%" },
+  calcCell: { padding: 3, fontSize: 5, color: "#002C4A", width: "8.3%", backgroundColor: "#F8F9FA" },
   totalRow: { flexDirection: "row", backgroundColor: "#F5EDE1" },
-  footer: { marginTop: 16, fontSize: 8, color: "#B19365", textAlign: "center" },
+  footer: { marginTop: 12, fontSize: 7, color: "#B19365", textAlign: "center" },
 });
 
-function brl(cents: number): string {
-  return (cents / 100).toFixed(2);
-}
+function brl(c: number): string { return (c / 100).toFixed(2); }
+function pct(a: number, b: number): string { return b === 0 ? "—" : ((a / b) * 100).toFixed(1) + "%"; }
 
-function pct(a: number, b: number): string {
-  return b === 0 ? "—" : ((a / b) * 100).toFixed(1) + "%";
+function vp(e: DailyEntryRow): number {
+  return e.plat1_vendas + e.plat2_vendas + e.plat3_vendas + e.plat4_vendas + e.plat5_vendas;
 }
-
-function fatTotal(e: DailyEntryRow): number {
-  return e.faturamento_principal + e.ob1_faturado + e.ob2_faturado
-    + e.ob3_faturado + e.ob4_faturado + e.ob5_faturado
-    + e.upsell_faturado + e.downsell_faturado;
+function fp(e: DailyEntryRow): number {
+  return e.plat1_faturado + e.plat2_faturado + e.plat3_faturado + e.plat4_faturado + e.plat5_faturado;
 }
+function funil(e: DailyEntryRow): number {
+  return e.ob1_faturado + e.ob2_faturado + e.ob3_faturado + e.ob4_faturado
+    + e.ob5_faturado + e.ob6_faturado + e.upsell_faturado + e.downsell_faturado;
+}
+function fat(e: DailyEntryRow): number { return fp(e) + funil(e); }
 
-const COLS = ["Dia", "Invest.", "Fat.Princ", "Vendas", "Fat.Total", "Lucro", "Margem%",
-  "CPA", "Ticket", "OB1", "OB2", "Upsell", "Downsell"];
+const COLS = ["Dia","Invest","Tot.Vend","Margem","Lucro","Vd.Princ","Fat.Princ",
+  "Tot.Funil","CPA","Ticket","CTR","CPM"];
 
 export function PlanilhaPDFDoc({ perpetuoName, mes, ano, entries }: Props) {
-  const totInv = entries.reduce((a, e) => a + e.investimento, 0);
-  const totFat = entries.reduce((a, e) => a + fatTotal(e), 0);
-  const totVendas = entries.reduce((a, e) => a + e.vendas_principal, 0);
-  const totLucro = totFat - totInv;
+  const tInv = entries.reduce((a, e) => a + e.investimento, 0);
+  const tFat = entries.reduce((a, e) => a + fat(e), 0);
+  const tVp = entries.reduce((a, e) => a + vp(e), 0);
 
   return (
     <Document>
@@ -63,40 +63,37 @@ export function PlanilhaPDFDoc({ perpetuoName, mes, ano, entries }: Props) {
             {COLS.map((c) => <Text key={c} style={s.headCell}>{c}</Text>)}
           </View>
           {entries.map((e) => {
-            const ft = fatTotal(e);
-            const luc = ft - e.investimento;
+            const f = fat(e); const l = f - e.investimento; const v = vp(e);
             return (
               <View key={e.id} style={s.row}>
                 <Text style={s.cell}>{e.data.split("-")[2]}</Text>
                 <Text style={s.cell}>{brl(e.investimento)}</Text>
-                <Text style={s.cell}>{brl(e.faturamento_principal)}</Text>
-                <Text style={s.cell}>{e.vendas_principal}</Text>
-                <Text style={s.calcCell}>{brl(ft)}</Text>
-                <Text style={s.calcCell}>{brl(luc)}</Text>
-                <Text style={s.calcCell}>{pct(luc, ft)}</Text>
-                <Text style={s.calcCell}>{e.vendas_principal === 0 ? "—" : brl(e.investimento / e.vendas_principal)}</Text>
-                <Text style={s.calcCell}>{e.vendas_principal === 0 ? "—" : brl(ft / e.vendas_principal)}</Text>
-                <Text style={s.cell}>{brl(e.ob1_faturado)}</Text>
-                <Text style={s.cell}>{brl(e.ob2_faturado)}</Text>
-                <Text style={s.cell}>{brl(e.upsell_faturado)}</Text>
-                <Text style={s.cell}>{brl(e.downsell_faturado)}</Text>
+                <Text style={s.calcCell}>{brl(f)}</Text>
+                <Text style={s.calcCell}>{pct(l, f)}</Text>
+                <Text style={s.calcCell}>{brl(l)}</Text>
+                <Text style={s.calcCell}>{v}</Text>
+                <Text style={s.calcCell}>{brl(fp(e))}</Text>
+                <Text style={s.calcCell}>{brl(funil(e))}</Text>
+                <Text style={s.calcCell}>{v === 0 ? "—" : brl(e.investimento / v)}</Text>
+                <Text style={s.calcCell}>{v === 0 ? "—" : brl(f / v)}</Text>
+                <Text style={s.cell}>{e.ctr}%</Text>
+                <Text style={s.cell}>{brl(e.cpm)}</Text>
               </View>
             );
           })}
           <View style={s.totalRow}>
             <Text style={s.cell}>Total</Text>
-            <Text style={s.cell}>{brl(totInv)}</Text>
-            <Text style={s.cell}>{brl(entries.reduce((a, e) => a + e.faturamento_principal, 0))}</Text>
-            <Text style={s.cell}>{totVendas}</Text>
-            <Text style={s.calcCell}>{brl(totFat)}</Text>
-            <Text style={s.calcCell}>{brl(totLucro)}</Text>
-            <Text style={s.calcCell}>{pct(totLucro, totFat)}</Text>
-            <Text style={s.calcCell}>{totVendas === 0 ? "—" : brl(totInv / totVendas)}</Text>
-            <Text style={s.calcCell}>{totVendas === 0 ? "—" : brl(totFat / totVendas)}</Text>
-            <Text style={s.cell}>{brl(entries.reduce((a, e) => a + e.ob1_faturado, 0))}</Text>
-            <Text style={s.cell}>{brl(entries.reduce((a, e) => a + e.ob2_faturado, 0))}</Text>
-            <Text style={s.cell}>{brl(entries.reduce((a, e) => a + e.upsell_faturado, 0))}</Text>
-            <Text style={s.cell}>{brl(entries.reduce((a, e) => a + e.downsell_faturado, 0))}</Text>
+            <Text style={s.cell}>{brl(tInv)}</Text>
+            <Text style={s.calcCell}>{brl(tFat)}</Text>
+            <Text style={s.calcCell}>{pct(tFat - tInv, tFat)}</Text>
+            <Text style={s.calcCell}>{brl(tFat - tInv)}</Text>
+            <Text style={s.calcCell}>{tVp}</Text>
+            <Text style={s.calcCell}>{brl(entries.reduce((a, e) => a + fp(e), 0))}</Text>
+            <Text style={s.calcCell}>{brl(entries.reduce((a, e) => a + funil(e), 0))}</Text>
+            <Text style={s.calcCell}>{tVp === 0 ? "—" : brl(tInv / tVp)}</Text>
+            <Text style={s.calcCell}>{tVp === 0 ? "—" : brl(tFat / tVp)}</Text>
+            <Text style={s.cell}>—</Text>
+            <Text style={s.cell}>—</Text>
           </View>
         </View>
         <Text style={s.footer}>Gerado em {new Date().toLocaleDateString("pt-BR")}</Text>

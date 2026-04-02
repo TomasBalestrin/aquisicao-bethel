@@ -10,17 +10,17 @@ interface ActionResponse<T = undefined> {
   error?: string;
 }
 
+const n = z.string().max(50).optional();
+
 const createSchema = z.object({
   perpetuo_id: z.string().uuid(),
   mes: z.number().int().min(1).max(12),
   ano: z.number().int().min(2020).max(2099),
-  ob1_nome: z.string().max(50).optional(),
-  ob2_nome: z.string().max(50).optional(),
-  ob3_nome: z.string().max(50).optional(),
-  ob4_nome: z.string().max(50).optional(),
-  ob5_nome: z.string().max(50).optional(),
-  upsell_nome: z.string().max(50).optional(),
-  downsell_nome: z.string().max(50).optional(),
+  ob1_nome: n, ob2_nome: n, ob3_nome: n,
+  ob4_nome: n, ob5_nome: n, ob6_nome: n,
+  upsell_nome: n, downsell_nome: n,
+  plat1_nome: n, plat2_nome: n, plat3_nome: n,
+  plat4_nome: n, plat5_nome: n,
 });
 
 function daysInMonth(mes: number, ano: number): number {
@@ -30,8 +30,7 @@ function daysInMonth(mes: number, ano: number): number {
 export async function getPlanilhasByPerpetuo(perpetuoId: string) {
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("planilhas")
-    .select("*")
+    .from("planilhas").select("*")
     .eq("perpetuo_id", perpetuoId)
     .order("ano", { ascending: false })
     .order("mes", { ascending: false });
@@ -50,15 +49,10 @@ export async function createPlanilha(
 
   const supabase = createClient();
   const { data: planilha, error } = await supabase
-    .from("planilhas")
-    .insert(parsed.data)
-    .select("*")
-    .single();
+    .from("planilhas").insert(parsed.data).select("*").single();
 
   if (error) {
-    if (error.code === "23505") {
-      return { success: false, error: "Já existe planilha para este mês/ano" };
-    }
+    if (error.code === "23505") return { success: false, error: "Já existe planilha para este mês/ano" };
     return { success: false, error: "Erro ao criar planilha" };
   }
 
@@ -69,10 +63,8 @@ export async function createPlanilha(
     return { planilha_id: planilha.id, data: `${parsed.data.ano}-${month}-${day}` };
   });
 
-  const { error: entriesError } = await supabase.from("daily_entries").insert(entries);
-  if (entriesError) {
-    return { success: false, error: "Planilha criada, mas erro ao gerar dias" };
-  }
+  const { error: ee } = await supabase.from("daily_entries").insert(entries);
+  if (ee) return { success: false, error: "Planilha criada, mas erro ao gerar dias" };
 
   revalidatePath(`/perpetuos/${parsed.data.perpetuo_id}`);
   return { success: true };

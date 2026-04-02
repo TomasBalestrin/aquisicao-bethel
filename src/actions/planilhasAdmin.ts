@@ -24,23 +24,19 @@ export async function duplicatePlanilha(
   input: z.infer<typeof dupSchema>
 ): Promise<ActionResponse<{ planilhaId: string; perpetuoId: string }>> {
   const parsed = dupSchema.safeParse(input);
-  if (!parsed.success) {
-    return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
-  }
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
 
   const supabase = createClient();
-  const { data: original } = await supabase
-    .from("planilhas").select("*").eq("id", parsed.data.planilhaId).single();
-
-  if (!original) return { success: false, error: "Planilha original não encontrada" };
+  const { data: og } = await supabase.from("planilhas").select("*").eq("id", parsed.data.planilhaId).single();
+  if (!og) return { success: false, error: "Planilha original não encontrada" };
 
   const { data: nova, error } = await supabase.from("planilhas").insert({
-    perpetuo_id: original.perpetuo_id,
-    mes: parsed.data.mes, ano: parsed.data.ano,
-    ob1_nome: original.ob1_nome, ob2_nome: original.ob2_nome,
-    ob3_nome: original.ob3_nome, ob4_nome: original.ob4_nome,
-    ob5_nome: original.ob5_nome,
-    upsell_nome: original.upsell_nome, downsell_nome: original.downsell_nome,
+    perpetuo_id: og.perpetuo_id, mes: parsed.data.mes, ano: parsed.data.ano,
+    ob1_nome: og.ob1_nome, ob2_nome: og.ob2_nome, ob3_nome: og.ob3_nome,
+    ob4_nome: og.ob4_nome, ob5_nome: og.ob5_nome, ob6_nome: og.ob6_nome,
+    upsell_nome: og.upsell_nome, downsell_nome: og.downsell_nome,
+    plat1_nome: og.plat1_nome, plat2_nome: og.plat2_nome, plat3_nome: og.plat3_nome,
+    plat4_nome: og.plat4_nome, plat5_nome: og.plat5_nome,
   }).select("*").single();
 
   if (error) {
@@ -54,39 +50,33 @@ export async function duplicatePlanilha(
     const month = String(parsed.data.mes).padStart(2, "0");
     return { planilha_id: nova.id, data: `${parsed.data.ano}-${month}-${day}` };
   });
-
   await supabase.from("daily_entries").insert(entries);
-  revalidatePath(`/perpetuos/${original.perpetuo_id}`);
-  return { success: true, data: { planilhaId: nova.id, perpetuoId: original.perpetuo_id } };
+  revalidatePath(`/perpetuos/${og.perpetuo_id}`);
+  return { success: true, data: { planilhaId: nova.id, perpetuoId: og.perpetuo_id } };
 }
 
+const n50 = z.string().max(50);
 const nomesSchema = z.object({
-  id: z.string().uuid(),
-  perpetuo_id: z.string().uuid(),
-  ob1_nome: z.string().max(50), ob2_nome: z.string().max(50),
-  ob3_nome: z.string().max(50), ob4_nome: z.string().max(50),
-  ob5_nome: z.string().max(50),
-  upsell_nome: z.string().max(50), downsell_nome: z.string().max(50),
+  id: z.string().uuid(), perpetuo_id: z.string().uuid(),
+  ob1_nome: n50, ob2_nome: n50, ob3_nome: n50,
+  ob4_nome: n50, ob5_nome: n50, ob6_nome: n50,
+  upsell_nome: n50, downsell_nome: n50,
+  plat1_nome: n50, plat2_nome: n50, plat3_nome: n50,
+  plat4_nome: n50, plat5_nome: n50,
 });
 
 export async function updatePlanilhaNomes(
   input: z.infer<typeof nomesSchema>
 ): Promise<ActionResponse> {
   const parsed = nomesSchema.safeParse(input);
-  if (!parsed.success) {
-    return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
-  }
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
 
   const supabase = createClient();
-  const { error } = await supabase.from("planilhas").update({
-    ob1_nome: parsed.data.ob1_nome, ob2_nome: parsed.data.ob2_nome,
-    ob3_nome: parsed.data.ob3_nome, ob4_nome: parsed.data.ob4_nome,
-    ob5_nome: parsed.data.ob5_nome,
-    upsell_nome: parsed.data.upsell_nome, downsell_nome: parsed.data.downsell_nome,
-    updated_at: new Date().toISOString(),
-  }).eq("id", parsed.data.id);
+  const { id, perpetuo_id, ...nomes } = parsed.data;
+  const { error } = await supabase.from("planilhas")
+    .update({ ...nomes, updated_at: new Date().toISOString() }).eq("id", id);
 
   if (error) return { success: false, error: "Erro ao atualizar nomes" };
-  revalidatePath(`/perpetuos/${parsed.data.perpetuo_id}`);
+  revalidatePath(`/perpetuos/${perpetuo_id}`);
   return { success: true };
 }
