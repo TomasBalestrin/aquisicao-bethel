@@ -52,6 +52,3 @@ export function calcTicketMedio(e: DailyEntryRow): number | null {
   return safeDivide(calcFaturamentoTotal(e), calcVendasPrincipal(e));
 }
 
-export function calcCarregamento(e: DailyEntryRow): number | null {
-  return safeDivide(e.page_view, e.cliques_link);
-}

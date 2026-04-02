@@ -3,11 +3,11 @@
 import { memo, useCallback, useMemo } from "react";
 import type { DailyEntryRow } from "@/types/daily-entry";
 import type { ColumnDef } from "./columnDefs";
-import { GROUP_COLORS } from "./columnDefs";
+import { GROUP_COLORS, CALC_BG } from "./columnDefs";
 import { EditableCell } from "./EditableCell";
 import {
   calcFaturamentoTotal, calcVendasPrincipal, calcFatPrincipal,
-  calcTotalFunil, calcCarregamento, safeDivide, centsToBrl,
+  calcTotalFunil, safeDivide, centsToBrl,
 } from "@/lib/utils/calcMetrics";
 
 interface Props {
@@ -26,9 +26,9 @@ function dynColor(key: string, val: number | null): string {
 
 function fmtCalc(val: number | null, col: ColumnDef): string {
   if (val === null) return "—";
-  if (col.key === "vendas_principal" || col.key === "calc_carregamento") return val.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
+  if (col.key === "vendas_principal") return val.toLocaleString("pt-BR");
   if (col.isCurrency) return `R$ ${centsToBrl(val)}`;
-  if (col.isPercent) return `${val.toFixed(2)}%`;
+  if (col.isPercent) return `${val.toFixed(2).replace(".", ",")}%`;
   return String(val);
 }
 
@@ -45,16 +45,15 @@ export const SpreadsheetRow = memo(function SpreadsheetRow({ entry, columns, onU
 
   const calc = useMemo(() => {
     const vp = calcVendasPrincipal(entry);
-    const fp = calcFatPrincipal(entry);
-    const tf = calcTotalFunil(entry);
     const ft = calcFaturamentoTotal(entry);
     const lucro = ft - entry.investimento;
-    const margem = ft === 0 ? null : (lucro / ft) * 100;
     return {
-      fat_total: ft, lucro, margem, vendas_principal: vp, fat_principal: fp, total_funil: tf,
+      fat_total: ft, lucro, vendas_principal: vp,
+      margem: ft === 0 ? null : (lucro / ft) * 100,
+      fat_principal: calcFatPrincipal(entry),
+      total_funil: calcTotalFunil(entry),
       cpa: safeDivide(entry.investimento, vp),
       ticket_medio: safeDivide(ft, vp),
-      calc_carregamento: calcCarregamento(entry),
       ob1_taxa: safeDivide(entry.ob1_vendas * 100, vp),
       ob2_taxa: safeDivide(entry.ob2_vendas * 100, vp),
       ob3_taxa: safeDivide(entry.ob3_vendas * 100, vp),
@@ -85,7 +84,7 @@ export const SpreadsheetRow = memo(function SpreadsheetRow({ entry, columns, onU
         if (!col.editable) {
           const val = calc[col.key] ?? null;
           return (
-            <td key={col.key} className={`border-r border-gray-200 ${cellBg} px-2 py-1.5 font-table text-[12px] tabular-nums ${dynColor(col.key, val)}`}>
+            <td key={col.key} className={`border-r border-gray-200 ${CALC_BG} px-2 py-1.5 font-table text-[12px] tabular-nums ${dynColor(col.key, val)}`}>
               {fmtCalc(val, col)}
             </td>
           );

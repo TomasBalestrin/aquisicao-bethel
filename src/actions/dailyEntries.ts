@@ -15,7 +15,7 @@ const EDITABLE_FIELDS = [
   "ob5_faturado", "ob5_vendas", "ob6_faturado", "ob6_vendas",
   "upsell_faturado", "upsell_vendas",
   "downsell_faturado", "downsell_vendas",
-  "ctr", "page_view", "initiate_checkout", "cpm", "cliques_link",
+  "ctr", "page_view", "initiate_checkout", "cpm", "cliques_link", "carregamento",
 ] as const;
 
 type EditableField = typeof EDITABLE_FIELDS[number];
