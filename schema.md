@@ -95,7 +95,8 @@
 | page_view | integer | default 0 |
 | initiate_checkout | integer | default 0 |
 | cpm | integer | default 0 (centavos) |
-| cliques_link | integer | default 0 |
+| cliques_link | integer | default 0 | (existe no banco mas não é usado na interface)
+| carregamento | integer | default 0 | campo editável
 | created_at | timestamptz | default now() |
 | updated_at | timestamptz | default now() |
 
@@ -113,7 +114,6 @@
 | margem | (lucro / faturamento_total) × 100 |
 | cpa | investimento / vendas_principal |
 | ticket_medio | faturamento_total / vendas_principal |
-| carregamento | page_view / cliques_link |
 | ob[1-6]_taxa | (ob[N]_vendas / vendas_principal) × 100 |
 | upsell_taxa | (upsell_vendas / vendas_principal) × 100 |
 | downsell_taxa | (downsell_vendas / vendas_principal) × 100 |

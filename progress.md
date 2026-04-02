@@ -122,3 +122,8 @@ FEITO:
 - [x] Etapa 1: limpeza estrutural (arquivos mortos, duplicações, código morto)
 - [x] Etapa 2: bugs corrigidos, validação Zod, schema.md atualizado
 - [x] Etapa 3: otimizações de performance (custom event sidebar, cache cálculos, select específico)
+- [x] Cor diferenciada para campos calculados na planilha (#EDF2F7)
+- [x] Removida coluna cliques_link, carregamento editável, símbolo % nas métricas percentuais
+- [x] Fix upload de avatar dos gestores (loading state, feedback, toast)
+- [x] Sidebar condicional: gestor não vê Gestores/Configurações
+- [x] KPIs gerais do mês na planilha (Investimento, Faturamento, Lucro, Margem, CPA, Ticket Médio)
