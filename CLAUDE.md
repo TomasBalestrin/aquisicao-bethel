@@ -58,8 +58,9 @@
 ## UI / Design system
 - Seguir TODAS as specs do design-system.md (cores, tipografia, componentes, estados)
 - Cores primárias: Navy Dark #001321, Gold #B19365, White #FFFFFF
-- Font primária: Plus Jakarta Sans (via next/font/local)
-- Font mono: JetBrains Mono (para valores numéricos na planilha e dashboard)
+- Font primária: Plus Jakarta Sans (body, labels, botões, títulos)
+- Font tabela: Poppins (dados da planilha, headers de colunas, totais, células editáveis)
+- Font mono: JetBrains Mono (valores numéricos no dashboard)
 - Border radius padrão: rounded-lg (14px) em cards, rounded-md (10px) em botões LG, rounded (6px) em inputs
 - Responsivo: mobile-first, breakpoints sm/md/lg do Tailwind
 - Ícones: Lucide React, estilo outline, stroke-width 2

@@ -85,6 +85,13 @@ FEITO:
 - [x] PDF atualizado para novo modelo
 - [x] Formulários de criar/editar planilha com seções: Plataformas, OBs, Upsell/Downsell
 - [x] SQL de migração gerado (3 arquivos separados)
+- [x] Migração multi-plataforma aplicada no Supabase
+- [x] Design system auditado contra design-system.html
+- [x] Sidebar fiel ao HTML: border-left Gold ativo, padding 28px, cores exatas
+- [x] Sidebar colapsável: botão chevron, ícone-only quando recolhida, localStorage
+- [x] Header: sticky, backdrop-blur, bg-white/85, padding 48px
+- [x] Poppins (font-table) em toda interface de planilha
+- [x] SidebarMargin component para transição suave de largura
 
 ---
 
