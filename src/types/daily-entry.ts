@@ -34,6 +34,7 @@ export type DailyEntryRow = {
   initiate_checkout: number;
   cpm: number;
   cliques_link: number;
+  carregamento: number;
   created_at: string;
   updated_at: string;
 };
@@ -74,6 +75,7 @@ export type DailyEntryInsert = {
   initiate_checkout?: number;
   cpm?: number;
   cliques_link?: number;
+  carregamento?: number;
   created_at?: string;
   updated_at?: string;
 };

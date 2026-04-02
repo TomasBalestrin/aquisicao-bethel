@@ -9,6 +9,7 @@ export const metadata = {
 export default async function SettingsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+  if (user.role !== "head") redirect("/dashboard");
 
   return (
     <div className="flex flex-col gap-6">

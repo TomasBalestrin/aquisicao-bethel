@@ -4,13 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "./auth";
 import { revalidatePath } from "next/cache";
+import type { ActionResponse, ActionResponseWithData } from "@/types/action";
 
-interface ActionResponse {
-  success: boolean;
-  error?: string;
-}
-
-export async function getGestorAccess(userId: string): Promise<{ success: boolean; data?: string[]; error?: string }> {
+export async function getGestorAccess(userId: string): Promise<ActionResponseWithData<string[]>> {
   const user = await getCurrentUser();
   if (!user || user.role !== "head") return { success: false, error: "Acesso restrito" };
 

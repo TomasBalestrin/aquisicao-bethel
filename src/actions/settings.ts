@@ -5,11 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "./auth";
 import { revalidatePath } from "next/cache";
-
-interface ActionResponse {
-  success: boolean;
-  error?: string;
-}
+import type { ActionResponse, ActionResponseWithData } from "@/types/action";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(100),
@@ -48,7 +44,7 @@ export async function updateProfile(
   return { success: true };
 }
 
-export async function uploadOwnAvatar(file: File): Promise<ActionResponse & { data?: string }> {
+export async function uploadOwnAvatar(file: File): Promise<ActionResponseWithData<string>> {
   const user = await getCurrentUser();
   if (!user) return { success: false, error: "Não autenticado" };
 

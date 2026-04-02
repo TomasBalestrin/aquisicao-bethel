@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { DollarSign, TrendingUp, Minus, Percent, Target, Ticket } from "lucide-react";
+import { DollarSign, TrendingUp, Minus, Percent, Target, Ticket, XCircle, RefreshCw } from "lucide-react";
 import { getDashboardData, type DashboardMetrics, type ChartPoint } from "@/actions/dashboard";
 import { formatBrl, formatPercent } from "@/lib/utils/formatCurrency";
 import { DashboardFilters } from "./DashboardFilters";
@@ -18,9 +18,11 @@ export function DashboardClient({ perpetuos }: Props) {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [chart, setChart] = useState<ChartPoint[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
+    setError(null);
     const result = await getDashboardData({
       perpetuoId: perpetuoId || undefined,
       dataInicio: dataInicio || undefined,
@@ -29,6 +31,8 @@ export function DashboardClient({ perpetuos }: Props) {
     if (result.success && result.data) {
       setMetrics(result.data.metrics);
       setChart(result.data.chart);
+    } else {
+      setError(result.error ?? "Erro ao carregar dados do dashboard");
     }
     setLoading(false);
   }, [perpetuoId, dataInicio, dataFim]);
@@ -46,9 +50,7 @@ export function DashboardClient({ perpetuos }: Props) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-[28px] font-bold tracking-[-0.5px] text-navy-dark">Dashboard</h1>
-      </div>
+      <h1 className="text-[28px] font-bold tracking-[-0.5px] text-navy-dark">Dashboard</h1>
 
       <DashboardFilters
         perpetuos={perpetuos} perpetuoId={perpetuoId}
@@ -58,14 +60,23 @@ export function DashboardClient({ perpetuos }: Props) {
 
       {loading ? (
         <p className="text-sm text-navy-50">Carregando...</p>
+      ) : error ? (
+        <div className="flex items-start gap-3 rounded-[6px] bg-[#FFEBEE] p-4">
+          <XCircle size={18} strokeWidth={2} className="mt-0.5 shrink-0 text-error" />
+          <div className="flex-1">
+            <p className="text-[13px] text-error">{error}</p>
+            <button onClick={fetchData} className="mt-2 flex items-center gap-1.5 text-[12px] font-semibold text-error hover:underline">
+              <RefreshCw size={14} strokeWidth={2} />
+              Tentar novamente
+            </button>
+          </div>
+        </div>
       ) : !metrics || (metrics.investido === 0 && metrics.faturamento === 0) ? (
         <p className="mt-8 text-center text-sm text-navy-50">Sem dados para o período selecionado</p>
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {cards.map((c) => (
-              <MetricCard key={c.label} icon={c.icon} label={c.label} value={c.value} />
-            ))}
+            {cards.map((c) => <MetricCard key={c.label} icon={c.icon} label={c.label} value={c.value} />)}
           </div>
           <EvolutionChart data={chart} />
         </>

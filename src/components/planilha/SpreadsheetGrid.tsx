@@ -6,6 +6,7 @@ import type { DailyEntryRow } from "@/types/daily-entry";
 import { getColumns, GROUP_COLORS, type ColumnDef } from "./columnDefs";
 import { SpreadsheetRow } from "./SpreadsheetRow";
 import { TotalsRow } from "./TotalsRow";
+import { PlanilhaKPIs } from "./PlanilhaKPIs";
 
 interface Props {
   entries: DailyEntryRow[];
@@ -17,7 +18,6 @@ interface Props {
     plat1_nome: string; plat2_nome: string; plat3_nome: string;
     plat4_nome: string; plat5_nome: string;
   };
-  onShowAll?: () => void;
 }
 
 const STORAGE_KEY = (id: string) => `hidden-columns-${id}`;
@@ -46,51 +46,47 @@ export function SpreadsheetGrid({ entries: initial, planilhaId, planilha }: Prop
     setHidden((prev) => { const next = new Set(prev); next.add(key); return next; });
   }, []);
 
-  // expose showAll via global for the page button
   useEffect(() => {
-    (window as unknown as Record<string, unknown>).__showAllColumns = () => {
-      setHidden(new Set());
-    };
+    (window as unknown as Record<string, unknown>).__showAllColumns = () => setHidden(new Set());
     return () => { delete (window as unknown as Record<string, unknown>).__showAllColumns; };
   }, []);
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200">
-      <table className="w-max min-w-full border-collapse">
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <HeaderCell key={col.key} col={col} onHide={hideColumn} />
+    <div className="flex flex-col gap-4">
+      <PlanilhaKPIs entries={entries} />
+      <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <table className="w-max min-w-full border-collapse">
+          <thead>
+            <tr>
+              {columns.map((col) => (
+                <HeaderCell key={col.key} col={col} onHide={hideColumn} />
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {entries.map((entry) => (
+              <SpreadsheetRow key={entry.id} entry={entry} columns={columns} onUpdate={handleUpdate} />
             ))}
-          </tr>
-        </thead>
-        <tbody>
-          {entries.map((entry) => (
-            <SpreadsheetRow key={entry.id} entry={entry} columns={columns} onUpdate={handleUpdate} />
-          ))}
-        </tbody>
-        <tfoot>
-          <TotalsRow entries={entries} columns={columns} />
-        </tfoot>
-      </table>
+          </tbody>
+          <tfoot>
+            <TotalsRow entries={entries} columns={columns} />
+          </tfoot>
+        </table>
+      </div>
     </div>
   );
 }
 
 function HeaderCell({ col, onHide }: { col: ColumnDef; onHide: (key: string) => void }) {
   const gc = GROUP_COLORS[col.group];
-  const bgClass = gc?.header ?? "bg-navy-dark";
+  const bgClass = !col.editable && col.key !== "data" ? `bg-[#3d5a80]` : gc?.header ?? "bg-navy-dark";
   const canHide = col.key !== "data";
 
   return (
     <th className={`${col.width} group/th relative whitespace-nowrap border-b border-r border-white/20 ${bgClass} px-2 py-2.5 text-left font-table text-[11px] font-semibold text-white`}>
       {col.label}
       {canHide && (
-        <button
-          onClick={() => onHide(col.key)}
-          className="absolute right-1 top-1/2 hidden -translate-y-1/2 rounded p-0.5 text-white/60 hover:text-white group-hover/th:block"
-          title={`Ocultar ${col.label}`}
-        >
+        <button onClick={() => onHide(col.key)} className="absolute right-1 top-1/2 hidden -translate-y-1/2 rounded p-0.5 text-white/60 hover:text-white group-hover/th:block" title={`Ocultar ${col.label}`}>
           <EyeOff size={12} strokeWidth={2} />
         </button>
       )}

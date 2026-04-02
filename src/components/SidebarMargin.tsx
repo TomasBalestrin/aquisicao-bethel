@@ -5,16 +5,18 @@ import { useState, useEffect } from "react";
 const STORAGE_KEY = "sidebar-collapsed";
 
 export function SidebarMargin({ children }: { children: React.ReactNode }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem(STORAGE_KEY) === "true";
+  });
 
   useEffect(() => {
-    function check() {
-      setCollapsed(localStorage.getItem(STORAGE_KEY) === "true");
+    function handler(e: Event) {
+      const detail = (e as CustomEvent<{ collapsed: boolean }>).detail;
+      setCollapsed(detail.collapsed);
     }
-    check();
-    window.addEventListener("storage", check);
-    const interval = setInterval(check, 300);
-    return () => { window.removeEventListener("storage", check); clearInterval(interval); };
+    window.addEventListener("sidebar-toggle", handler);
+    return () => window.removeEventListener("sidebar-toggle", handler);
   }, []);
 
   return (

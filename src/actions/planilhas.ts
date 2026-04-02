@@ -2,13 +2,9 @@
 
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { daysInMonth } from "@/lib/helpers";
 import { revalidatePath } from "next/cache";
-
-interface ActionResponse<T = undefined> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
+import type { ActionResponse } from "@/types/action";
 
 const n = z.string().max(50).optional();
 
@@ -23,11 +19,12 @@ const createSchema = z.object({
   plat4_nome: n, plat5_nome: n,
 });
 
-function daysInMonth(mes: number, ano: number): number {
-  return new Date(ano, mes, 0).getDate();
-}
+const uuidSchema = z.string().uuid("ID inválido");
 
 export async function getPlanilhasByPerpetuo(perpetuoId: string) {
+  const validId = uuidSchema.safeParse(perpetuoId);
+  if (!validId.success) return { success: false as const, error: "ID inválido" };
+
   const supabase = createClient();
   const { data, error } = await supabase
     .from("planilhas").select("*")
@@ -73,6 +70,10 @@ export async function createPlanilha(
 export async function deletePlanilha(
   id: string, perpetuoId: string
 ): Promise<ActionResponse> {
+  const v1 = uuidSchema.safeParse(id);
+  const v2 = uuidSchema.safeParse(perpetuoId);
+  if (!v1.success || !v2.success) return { success: false, error: "ID inválido" };
+
   const supabase = createClient();
   const { error } = await supabase.from("planilhas").delete().eq("id", id);
   if (error) return { success: false, error: "Erro ao excluir planilha" };

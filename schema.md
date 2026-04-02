@@ -45,12 +45,18 @@
 | ob3_nome | text | default 'Order Bump 3' |
 | ob4_nome | text | default 'Order Bump 4' |
 | ob5_nome | text | default 'Order Bump 5' |
+| ob6_nome | text | default 'Order Bump 6' |
 | upsell_nome | text | default 'Upsell' |
 | downsell_nome | text | default 'Downsell' |
+| plat1_nome | text | default 'Plataforma 1' |
+| plat2_nome | text | default 'Plataforma 2' |
+| plat3_nome | text | default 'Plataforma 3' |
+| plat4_nome | text | default 'Plataforma 4' |
+| plat5_nome | text | default 'Plataforma 5' |
 | created_at | timestamptz | default now() |
 | updated_at | timestamptz | default now() |
 
-> Constraint: UNIQUE(perpetuo_id, mes, ano) — não pode ter duas planilhas do mesmo mês/ano para o mesmo perpétuo
+> Constraint: UNIQUE(perpetuo_id, mes, ano)
 
 ### daily_entries
 | Campo | Tipo | Constraints |
@@ -59,8 +65,16 @@
 | planilha_id | uuid | FK → planilhas.id, not null |
 | data | date | not null |
 | investimento | integer | default 0 (centavos) |
-| faturamento_principal | integer | default 0 (centavos) |
-| vendas_principal | integer | default 0 |
+| plat1_vendas | integer | default 0 |
+| plat1_faturado | integer | default 0 (centavos) |
+| plat2_vendas | integer | default 0 |
+| plat2_faturado | integer | default 0 (centavos) |
+| plat3_vendas | integer | default 0 |
+| plat3_faturado | integer | default 0 (centavos) |
+| plat4_vendas | integer | default 0 |
+| plat4_faturado | integer | default 0 (centavos) |
+| plat5_vendas | integer | default 0 |
+| plat5_faturado | integer | default 0 (centavos) |
 | ob1_faturado | integer | default 0 (centavos) |
 | ob1_vendas | integer | default 0 |
 | ob2_faturado | integer | default 0 (centavos) |
@@ -71,15 +85,18 @@
 | ob4_vendas | integer | default 0 |
 | ob5_faturado | integer | default 0 (centavos) |
 | ob5_vendas | integer | default 0 |
+| ob6_faturado | integer | default 0 (centavos) |
+| ob6_vendas | integer | default 0 |
 | upsell_faturado | integer | default 0 (centavos) |
 | upsell_vendas | integer | default 0 |
 | downsell_faturado | integer | default 0 (centavos) |
 | downsell_vendas | integer | default 0 |
 | ctr | numeric(5,2) | default 0 (percentual) |
 | page_view | integer | default 0 |
-| carregamento | integer | default 0 |
 | initiate_checkout | integer | default 0 |
 | cpm | integer | default 0 (centavos) |
+| cliques_link | integer | default 0 | (existe no banco mas não é usado na interface)
+| carregamento | integer | default 0 | campo editável
 | created_at | timestamptz | default now() |
 | updated_at | timestamptz | default now() |
 
@@ -87,27 +104,22 @@
 
 ## Campos calculados (frontend — NÃO armazenar no banco)
 
-Estes campos são calculados no frontend em tempo real:
-
 | Campo | Fórmula |
 |-------|---------|
-| faturamento_total | faturamento_principal + ob1..5_faturado + upsell_faturado + downsell_faturado |
-| faturamento_extras | ob1..5_faturado + upsell_faturado + downsell_faturado |
+| vendas_principal | plat1_vendas + plat2_vendas + plat3_vendas + plat4_vendas + plat5_vendas |
+| faturamento_principal | plat1_faturado + plat2_faturado + plat3_faturado + plat4_faturado + plat5_faturado |
+| total_funil | ob1..6_faturado + upsell_faturado + downsell_faturado |
+| faturamento_total | faturamento_principal + total_funil |
 | lucro | faturamento_total - investimento |
 | margem | (lucro / faturamento_total) × 100 |
 | cpa | investimento / vendas_principal |
 | ticket_medio | faturamento_total / vendas_principal |
-| pag_compra | (vendas_principal / page_view) × 100 |
-| pag_check | (initiate_checkout / page_view) × 100 |
-| check_compra | (vendas_principal / initiate_checkout) × 100 |
-
-### Ordem das colunas na planilha
-
-Dia (dd/mm/aaaa) → Investimento → Fat. Total → Vendas → Lucro → Margem% →
-Nº Vendas Princ. → Vendas Princ. R$ → Fat. Extras →
-OB1..5 (R$ + Vendas) → Upsell (R$ + Vendas) → Downsell (R$ + Vendas) →
-CPA → Ticket Médio → CTR% → Page Views → Carreg. → Início Check →
-Pág→Compra% → Pág→Check% → Check→Compra% → CPM
+| ob[1-6]_taxa | (ob[N]_vendas / vendas_principal) × 100 |
+| upsell_taxa | (upsell_vendas / vendas_principal) × 100 |
+| downsell_taxa | (downsell_vendas / vendas_principal) × 100 |
+| conv_pag_checkout | (initiate_checkout / page_view) × 100 |
+| conv_checkout_compra | (vendas_principal / initiate_checkout) × 100 |
+| conv_pag_compra | (vendas_principal / page_view) × 100 |
 
 > Divisões por zero: quando o divisor for 0, exibir "—" na interface.
 > Lucro/Margem positivos em verde (#2E7D32), negativos em vermelho (#C62828).
@@ -134,4 +146,4 @@ Pág→Compra% → Pág→Check% → Check→Compra% → CPM
 - Deletar planilha faz CASCADE em daily_entries
 - Deletar user remove seus registros de perpetuo_access (não deleta os perpétuos que ele gerencia)
 - Valores monetários SEMPRE em centavos (integer). Conversão para reais apenas na interface.
-- Ao criar uma planilha, o sistema pré-cria as daily_entries para todos os dias do mês selecionado (facilita a interface tipo spreadsheet)
+- Ao criar uma planilha, o sistema pré-cria as daily_entries para todos os dias do mês selecionado

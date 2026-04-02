@@ -1,16 +1,11 @@
 "use server";
 
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getCurrentUser } from "./auth";
+import { createClient } from "@/lib/supabase/server";
+import { assertHead } from "@/lib/helpers";
 import { revalidatePath } from "next/cache";
-
-interface ActionResponse<T = undefined> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
+import type { ActionResponse, ActionResponseWithData } from "@/types/action";
 
 const createSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(100),
@@ -27,22 +22,14 @@ type GestorRow = {
   created_at: string;
 };
 
-async function assertHead(): Promise<ActionResponse | null> {
-  const user = await getCurrentUser();
-  if (!user || user.role !== "head") {
-    return { success: false, error: "Acesso restrito ao Head" };
-  }
-  return null;
-}
-
-export async function getGestores(): Promise<ActionResponse<GestorRow[]>> {
+export async function getGestores(): Promise<ActionResponseWithData<GestorRow[]>> {
   const denied = await assertHead();
   if (denied) return { success: false, error: denied.error };
 
   const supabase = createClient();
   const { data, error } = await supabase
     .from("users")
-    .select("*")
+    .select("id, email, name, avatar_url, role, created_at")
     .eq("role", "gestor")
     .order("created_at", { ascending: false });
 

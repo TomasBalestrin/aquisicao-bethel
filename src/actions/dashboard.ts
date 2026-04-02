@@ -4,7 +4,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "./auth";
 import {
-  calcFaturamentoTotal, calcLucro, calcVendasPrincipal, safeDivide,
+  calcFaturamentoTotal, calcVendasPrincipal, safeDivide,
 } from "@/lib/utils/calcMetrics";
 import type { DailyEntryRow } from "@/types/daily-entry";
 
@@ -63,11 +63,12 @@ export async function getDashboardData(filters: Filters): Promise<DashboardResul
 
   const chart: ChartPoint[] = [];
   for (const e of entries) {
+    const vp = calcVendasPrincipal(e);
     const fat = calcFaturamentoTotal(e);
-    const luc = calcLucro(e);
+    const luc = fat - e.investimento;
     investido += e.investimento;
     faturamento += fat;
-    vendas += calcVendasPrincipal(e);
+    vendas += vp;
     chart.push({ data: e.data, faturamento: fat, lucro: luc, investimento: e.investimento });
   }
 

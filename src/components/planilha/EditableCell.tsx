@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import { toast } from "sonner";
 import { updateDailyEntry } from "@/actions/dailyEntries";
 import { centsToBrl, brlToCents } from "@/lib/utils/calcMetrics";
 
@@ -18,6 +19,7 @@ export function EditableCell({ entryId, field, value, isCurrency, isPercent, onU
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(displayVal);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
@@ -31,8 +33,24 @@ export function EditableCell({ entryId, field, value, isCurrency, isPercent, onU
 
     if (finalVal === value) return;
     setSaving(true);
+    setError(false);
     onUpdate(field, finalVal);
-    await updateDailyEntry(entryId, field as Parameters<typeof updateDailyEntry>[1], finalVal);
+
+    try {
+      const result = await updateDailyEntry(entryId, field as Parameters<typeof updateDailyEntry>[1], finalVal);
+      if (!result.success) {
+        onUpdate(field, value);
+        setError(true);
+        toast.error("Erro ao salvar célula");
+        setTimeout(() => setError(false), 2000);
+      }
+    } catch (err) {
+      console.error("Erro ao salvar:", err);
+      onUpdate(field, value);
+      setError(true);
+      toast.error("Erro ao salvar célula");
+      setTimeout(() => setError(false), 2000);
+    }
     setSaving(false);
   }, [entryId, field, value, isCurrency, isPercent, onUpdate]);
 
@@ -48,11 +66,13 @@ export function EditableCell({ entryId, field, value, isCurrency, isPercent, onU
     setEditing(false);
   }
 
+  const borderCls = error ? "ring-2 ring-error/50" : "";
+
   if (!editing) {
     return (
       <div
         onClick={() => { setEditing(true); setTimeout(() => inputRef.current?.select(), 0); }}
-        className={`cursor-pointer px-2 py-1.5 font-table text-[12px] tabular-nums ${saving ? "text-gold" : "text-navy-dark"}`}
+        className={`cursor-pointer px-2 py-1.5 font-table text-[12px] tabular-nums ${borderCls} ${saving ? "text-gold" : "text-navy-dark"}`}
       >
         {isCurrency ? `R$ ${displayVal}` : displayVal}
       </div>
@@ -67,7 +87,7 @@ export function EditableCell({ entryId, field, value, isCurrency, isPercent, onU
       onChange={(e) => handleChange(e.target.value)}
       onBlur={handleBlur}
       onKeyDown={(e) => { if (e.key === "Enter") handleBlur(); }}
-      className="w-full bg-gold-lightest px-2 py-1.5 font-table text-[12px] tabular-nums text-navy-dark outline-none"
+      className={`w-full bg-gold-lightest px-2 py-1.5 font-table text-[12px] tabular-nums text-navy-dark outline-none ${borderCls}`}
     />
   );
 }

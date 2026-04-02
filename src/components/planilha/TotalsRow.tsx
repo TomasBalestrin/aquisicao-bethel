@@ -9,8 +9,8 @@ import {
 
 interface Props { entries: DailyEntryRow[]; columns: ColumnDef[] }
 
-function sum(entries: DailyEntryRow[], f: string): number {
-  return entries.reduce((a, e) => a + (e[f as keyof DailyEntryRow] as number ?? 0), 0);
+function sum(es: DailyEntryRow[], f: string): number {
+  return es.reduce((a, e) => a + (e[f as keyof DailyEntryRow] as number ?? 0), 0);
 }
 
 function getTotal(es: DailyEntryRow[], key: string): number | null {
@@ -29,7 +29,6 @@ function getTotal(es: DailyEntryRow[], key: string): number | null {
     case "total_funil": return es.reduce((a, e) => a + calcTotalFunil(e), 0);
     case "cpa": return safeDivide(sum(es, "investimento"), vp);
     case "ticket_medio": return safeDivide(fat, vp);
-    case "calc_carregamento": return safeDivide(sum(es, "page_view"), sum(es, "cliques_link"));
     case "ob1_taxa": return safeDivide(sum(es, "ob1_vendas") * 100, vp);
     case "ob2_taxa": return safeDivide(sum(es, "ob2_vendas") * 100, vp);
     case "ob3_taxa": return safeDivide(sum(es, "ob3_vendas") * 100, vp);
@@ -48,9 +47,9 @@ function getTotal(es: DailyEntryRow[], key: string): number | null {
 
 function fmt(val: number | null, col: ColumnDef): string {
   if (val === null) return "—";
-  if (col.key === "vendas_principal" || col.key === "calc_carregamento") return val.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
+  if (col.key === "vendas_principal") return val.toLocaleString("pt-BR");
   if (col.isCurrency) return `R$ ${centsToBrl(val)}`;
-  if (col.isPercent) return `${val.toFixed(2)}%`;
+  if (col.isPercent) return `${val.toFixed(2).replace(".", ",")}%`;
   return val.toLocaleString("pt-BR");
 }
 
