@@ -3,7 +3,9 @@
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "./auth";
-import { calcFaturamentoTotal, calcLucro, safeDivide } from "@/lib/utils/calcMetrics";
+import {
+  calcFaturamentoTotal, calcLucro, calcVendasPrincipal, safeDivide,
+} from "@/lib/utils/calcMetrics";
 import type { DailyEntryRow } from "@/types/daily-entry";
 
 const filtersSchema = z.object({
@@ -46,9 +48,7 @@ export async function getDashboardData(filters: Filters): Promise<DashboardResul
   const supabase = createClient();
   let query = supabase.from("daily_entries").select("*, planilhas!inner(perpetuo_id)");
 
-  if (filters.perpetuoId) {
-    query = query.eq("planilhas.perpetuo_id", filters.perpetuoId);
-  }
+  if (filters.perpetuoId) query = query.eq("planilhas.perpetuo_id", filters.perpetuoId);
   if (filters.dataInicio) query = query.gte("data", filters.dataInicio);
   if (filters.dataFim) query = query.lte("data", filters.dataFim);
 
@@ -67,7 +67,7 @@ export async function getDashboardData(filters: Filters): Promise<DashboardResul
     const luc = calcLucro(e);
     investido += e.investimento;
     faturamento += fat;
-    vendas += e.vendas_principal;
+    vendas += calcVendasPrincipal(e);
     chart.push({ data: e.data, faturamento: fat, lucro: luc, investimento: e.investimento });
   }
 
@@ -76,9 +76,7 @@ export async function getDashboardData(filters: Filters): Promise<DashboardResul
     success: true,
     data: {
       metrics: {
-        investido,
-        faturamento,
-        lucro,
+        investido, faturamento, lucro,
         margem: safeDivide(lucro * 100, faturamento),
         cpa: safeDivide(investido, vendas),
         ticketMedio: safeDivide(faturamento, vendas),

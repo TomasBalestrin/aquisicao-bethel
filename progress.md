@@ -74,6 +74,17 @@ FEITO:
 - [x] Cards de planilha com ícones de ação: Abrir, Duplicar, Editar, Excluir
 - [x] Dialog de confirmação para excluir planilha
 - [x] Atualizar design-system.md (v1.3: ícones de ação, fontes corrigidas)
+- [x] Multi-plataforma: 5 plataformas configuráveis de pagamento
+- [x] 6 Order Bumps (era 5)
+- [x] cliques_link como novo campo editável
+- [x] Carregamento agora é calculado (page_view / cliques_link)
+- [x] vendas_principal e faturamento_principal agora calculados (soma plataformas)
+- [x] Taxas % por OB/upsell/downsell como colunas calculadas
+- [x] 3 seções coloridas: Métricas Principais (azul), Plataforma (laranja), Facebook (azul)
+- [x] Dashboard atualizado para novo modelo multi-plataforma
+- [x] PDF atualizado para novo modelo
+- [x] Formulários de criar/editar planilha com seções: Plataformas, OBs, Upsell/Downsell
+- [x] SQL de migração gerado (3 arquivos separados)
 
 ---
 
@@ -87,3 +98,7 @@ FEITO:
 - Supabase Auth com email/password (sem OAuth)
 - Zod para validação em todas as Server Actions
 - Admin client com SERVICE_ROLE_KEY para gestão de usuários
+- Multi-plataforma com 5 slots configuráveis de pagamento
+- 6 Order Bumps (expandido de 5)
+- Carregamento agora é calculado (page_view / cliques_link)
+- vendas_principal e faturamento_principal são calculados (soma das plataformas)

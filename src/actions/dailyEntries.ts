@@ -11,12 +11,16 @@ interface ActionResponse<T = undefined> {
 }
 
 const EDITABLE_FIELDS = [
-  "investimento", "faturamento_principal", "vendas_principal",
+  "investimento",
+  "plat1_vendas", "plat1_faturado", "plat2_vendas", "plat2_faturado",
+  "plat3_vendas", "plat3_faturado", "plat4_vendas", "plat4_faturado",
+  "plat5_vendas", "plat5_faturado",
   "ob1_faturado", "ob1_vendas", "ob2_faturado", "ob2_vendas",
   "ob3_faturado", "ob3_vendas", "ob4_faturado", "ob4_vendas",
-  "ob5_faturado", "ob5_vendas", "upsell_faturado", "upsell_vendas",
-  "downsell_faturado", "downsell_vendas", "ctr",
-  "page_view", "carregamento", "initiate_checkout", "cpm",
+  "ob5_faturado", "ob5_vendas", "ob6_faturado", "ob6_vendas",
+  "upsell_faturado", "upsell_vendas",
+  "downsell_faturado", "downsell_vendas",
+  "ctr", "page_view", "initiate_checkout", "cpm", "cliques_link",
 ] as const;
 
 type EditableField = typeof EDITABLE_FIELDS[number];
