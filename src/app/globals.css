@@ -53,6 +53,7 @@
     /* === TIPOGRAFIA === */
     --font-primary: var(--font-plus-jakarta);
     --font-mono: var(--font-jetbrains);
+    --font-table: var(--font-poppins);
 
     /* === shadcn/ui tokens === */
     --background: 0 0% 100%;

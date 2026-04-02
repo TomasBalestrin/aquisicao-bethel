@@ -83,7 +83,7 @@ function HeaderCell({ col, onHide }: { col: ColumnDef; onHide: (key: string) => 
   const canHide = col.key !== "data";
 
   return (
-    <th className={`${col.width} group/th relative whitespace-nowrap border-b border-r border-white/20 ${bgClass} px-2 py-2.5 text-left text-[11px] font-semibold text-white`}>
+    <th className={`${col.width} group/th relative whitespace-nowrap border-b border-r border-white/20 ${bgClass} px-2 py-2.5 text-left font-table text-[11px] font-semibold text-white`}>
       {col.label}
       {canHide && (
         <button
