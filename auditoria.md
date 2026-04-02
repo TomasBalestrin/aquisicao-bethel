@@ -2,7 +2,7 @@
 Data: 2026-04-02
 
 ## Resumo Executivo
-- 4 bugs encontrados (1 crítico, 3 menores)
+- 7 bugs encontrados (1 crítico, 6 menores)
 - 5 arquivos mortos (SQL obsoletos)
 - 3 duplicações
 - 6 violações de conformidade
@@ -23,6 +23,9 @@ Data: 2026-04-02
 | B2 | src/actions/gestorAccess.ts | 8-11 | Interface `ActionResponse` definida mas nunca usada (função retorna tipo inline na linha 13) | Código morto dentro do arquivo |
 | B3 | src/actions/gestoresAdmin.ts | 70 | `uploadAvatar` retorna `ActionResponse & { data?: string }` — tipo intersection inconsistente com padrão do projeto | Inconsistência de tipagem |
 | B4 | src/actions/settings.ts | 51 | `uploadOwnAvatar` usa mesmo padrão inconsistente `ActionResponse & { data?: string }` | Inconsistência de tipagem |
+| B5 | src/components/dashboard/DashboardClient.tsx | 22-35 | Sem feedback de erro quando `getDashboardData()` falha — falha silenciosa, usuário não sabe que deu erro | UX ruim em caso de erro |
+| B6 | src/components/planilha/EditableCell.tsx | 28-37 | `updateDailyEntry()` sem try/catch — se o save falhar, UI mostra como salvo mas dado não persistiu | Inconsistência de dados |
+| B7 | src/components/Sidebar.tsx | 12 | Prop `currentPath` declarada no interface mas nunca usada (usa `usePathname()` em vez disso). Caller passa string vazia. | Código morto |
 
 ---
 
