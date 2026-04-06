@@ -33,8 +33,9 @@ export default async function PlanilhaPage({ params }: Props) {
   const entries = result.data ?? [];
 
   return (
-    <div className="flex flex-col gap-4 overflow-hidden">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="-m-6 flex h-[calc(100%+48px)] flex-col overflow-hidden lg:-m-12 lg:h-[calc(100%+96px)]">
+      {/* Título + Botões — FIXO */}
+      <div className="flex flex-shrink-0 flex-wrap items-center justify-between gap-3 px-6 py-4">
         <div className="flex items-center gap-3">
           <Link
             href={`/perpetuos/${params.id}`}
@@ -53,19 +54,23 @@ export default async function PlanilhaPage({ params }: Props) {
           ano={planilha.ano}
         />
       </div>
-      <SpreadsheetGrid
-        entries={entries}
-        planilhaId={params.planilhaId}
-        planilha={{
-          ob1_nome: planilha.ob1_nome, ob2_nome: planilha.ob2_nome,
-          ob3_nome: planilha.ob3_nome, ob4_nome: planilha.ob4_nome,
-          ob5_nome: planilha.ob5_nome, ob6_nome: planilha.ob6_nome,
-          upsell_nome: planilha.upsell_nome, downsell_nome: planilha.downsell_nome,
-          plat1_nome: planilha.plat1_nome, plat2_nome: planilha.plat2_nome,
-          plat3_nome: planilha.plat3_nome, plat4_nome: planilha.plat4_nome,
-          plat5_nome: planilha.plat5_nome,
-        }}
-      />
+
+      {/* SpreadsheetGrid preenche o restante */}
+      <div className="flex-1 overflow-hidden px-6 pb-4">
+        <SpreadsheetGrid
+          entries={entries}
+          planilhaId={params.planilhaId}
+          planilha={{
+            ob1_nome: planilha.ob1_nome, ob2_nome: planilha.ob2_nome,
+            ob3_nome: planilha.ob3_nome, ob4_nome: planilha.ob4_nome,
+            ob5_nome: planilha.ob5_nome, ob6_nome: planilha.ob6_nome,
+            upsell_nome: planilha.upsell_nome, downsell_nome: planilha.downsell_nome,
+            plat1_nome: planilha.plat1_nome, plat2_nome: planilha.plat2_nome,
+            plat3_nome: planilha.plat3_nome, plat4_nome: planilha.plat4_nome,
+            plat5_nome: planilha.plat5_nome,
+          }}
+        />
+      </div>
     </div>
   );
 }

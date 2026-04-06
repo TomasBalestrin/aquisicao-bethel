@@ -43,15 +43,15 @@ export function PlanilhaKPIs({ entries }: Props) {
     { label: "LUCRO", value: has ? fmtVal(data.lucro) : "—", color: lcCl },
     { label: "MARGEM", value: has ? fmtPct(data.margem) : "—", color: mgCl },
     { label: "CPA", value: has && data.cpa !== null ? fmtVal(data.cpa) : "—", color: "text-navy-dark" },
-    { label: "TICKET MÉDIO", value: has && data.ticket !== null ? fmtVal(data.ticket) : "—", color: "text-navy-dark" },
+    { label: "TICKET MÉD.", value: has && data.ticket !== null ? fmtVal(data.ticket) : "—", color: "text-navy-dark" },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+    <div className="grid min-w-0 grid-cols-3 gap-2 lg:grid-cols-6">
       {kpis.map((k) => (
-        <div key={k.label} className="rounded-lg border border-gray-200 bg-white p-4">
-          <p className="text-[11px] font-bold uppercase tracking-[1px] text-navy-50">{k.label}</p>
-          <p className={`mt-1 font-mono text-[20px] font-extrabold tracking-[-0.5px] ${k.color}`}>
+        <div key={k.label} className="min-w-0 overflow-hidden rounded-lg border border-gray-200 bg-white p-3">
+          <p className="truncate text-[10px] font-bold uppercase tracking-[0.5px] text-navy-50">{k.label}</p>
+          <p className={`mt-0.5 truncate font-mono text-[16px] font-extrabold leading-tight ${k.color}`}>
             {k.value}
           </p>
         </div>

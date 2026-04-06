@@ -13,11 +13,11 @@ export default async function AuthLayout({
   if (!user) redirect("/login");
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar userName={user.name} userRole={user.role} />
       <SidebarMargin>
         <Header userName={user.name} avatarUrl={user.avatar_url} />
-        <main className="flex-1 bg-gray-50 p-12">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 p-6 lg:p-12">
           {children}
         </main>
       </SidebarMargin>

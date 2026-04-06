@@ -20,7 +20,7 @@ export function SidebarMargin({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className={`flex flex-1 flex-col transition-all duration-300 ${collapsed ? "lg:ml-[72px]" : "lg:ml-[260px]"}`}>
+    <div className={`flex flex-1 flex-col overflow-hidden transition-all duration-300 ${collapsed ? "lg:ml-[72px]" : "lg:ml-[260px]"}`}>
       {children}
     </div>
   );
