@@ -84,7 +84,7 @@ export function getColumns(p: PlanilhaNames): ColumnDef[] {
     c("ctr", "CTR %", "fb", { isPercent: true, width: "w-[70px]" }),
     $("cpm", "CPM", "fb", { width: "w-[80px]" }),
     c("page_view", "Vis. Página", "fb", { width: "w-[90px]" }),
-    c("carregamento", "Carregamento", "fb", { width: "w-[100px]" }),
+    c("carregamento", "Carregamento", "fb", { isPercent: true, width: "w-[100px]" }),
     c("initiate_checkout", "Fin. Compra", "fb", { width: "w-[95px]" }),
     x("conv_pag_check", "Conv Pág/Check %", "fb", { isPercent: true, width: "w-[120px]" }),
     x("conv_check_compra", "Conv Check/Compra %", "fb", { isPercent: true, width: "w-[135px]" }),
