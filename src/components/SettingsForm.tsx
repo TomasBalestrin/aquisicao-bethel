@@ -28,20 +28,28 @@ export function SettingsForm({ name, email, avatarUrl }: Props) {
     const fd = new FormData(e.currentTarget);
     setLoading(true);
 
-    const file = fileRef.current?.files?.[0];
-    if (file) {
-      const res = await uploadOwnAvatar(file);
-      if (!res.success) toast.error(res.error ?? "Erro no upload da foto");
+    try {
+      const file = fileRef.current?.files?.[0];
+      if (file) {
+        const avatarFd = new FormData();
+        avatarFd.append("file", file);
+        const res = await uploadOwnAvatar(avatarFd);
+        if (!res.success) toast.error(res.error ?? "Erro no upload da foto");
+      }
+
+      const result = await updateProfile({
+        name: fd.get("name") as string,
+        email: fd.get("email") as string,
+      });
+
+      if (result.success) toast.success("Perfil atualizado");
+      else toast.error(result.error ?? "Erro ao salvar");
+    } catch (err) {
+      console.error("Erro ao salvar perfil:", err);
+      toast.error("Erro inesperado ao salvar");
+    } finally {
+      setLoading(false);
     }
-
-    const result = await updateProfile({
-      name: fd.get("name") as string,
-      email: fd.get("email") as string,
-    });
-    setLoading(false);
-
-    if (result.success) toast.success("Perfil atualizado");
-    else toast.error(result.error ?? "Erro ao salvar");
   }
 
   return (
