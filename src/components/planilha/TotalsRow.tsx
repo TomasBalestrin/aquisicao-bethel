@@ -41,6 +41,7 @@ function getTotal(es: DailyEntryRow[], key: string): number | null {
     case "conv_check_compra": return safeDivide(vp * 100, sum(es, "initiate_checkout"));
     case "conv_pag_compra": return safeDivide(vp * 100, sum(es, "page_view"));
     case "ctr": { const ct = es.filter((e) => e.ctr > 0).length; return ct === 0 ? null : es.reduce((a, e) => a + e.ctr, 0) / ct; }
+    case "carregamento": { const ct = es.filter((e) => e.carregamento > 0).length; return ct === 0 ? null : es.reduce((a, e) => a + e.carregamento, 0) / ct; }
     default: return sum(es, key);
   }
 }

@@ -14,17 +14,27 @@ interface Props {
   onUpdate: (field: string, value: number) => void;
 }
 
+function formatDisplay(value: number, isCurrency: boolean, isPercent: boolean): string {
+  if (isCurrency) return `R$ ${centsToBrl(value)}`;
+  if (isPercent) return `${String(value).replace(".", ",")}%`;
+  return String(value);
+}
+
+function formatEdit(value: number, isCurrency: boolean): string {
+  if (isCurrency) return centsToBrl(value);
+  return String(value);
+}
+
 export function EditableCell({ entryId, field, value, isCurrency, isPercent, onUpdate }: Props) {
-  const displayVal = isCurrency ? centsToBrl(value) : String(value);
   const [editing, setEditing] = useState(false);
-  const [text, setText] = useState(displayVal);
+  const [text, setText] = useState(formatEdit(value, isCurrency));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
-    if (!editing) setText(isCurrency ? centsToBrl(value) : String(value));
+    if (!editing) setText(formatEdit(value, isCurrency));
   }, [value, editing, isCurrency]);
 
   const save = useCallback(async (val: string) => {
@@ -74,7 +84,7 @@ export function EditableCell({ entryId, field, value, isCurrency, isPercent, onU
         onClick={() => { setEditing(true); setTimeout(() => inputRef.current?.select(), 0); }}
         className={`cursor-pointer px-2 py-1.5 font-table text-[12px] tabular-nums ${borderCls} ${saving ? "text-gold" : "text-navy-dark"}`}
       >
-        {isCurrency ? `R$ ${displayVal}` : displayVal}
+        {formatDisplay(value, isCurrency, isPercent)}
       </div>
     );
   }
