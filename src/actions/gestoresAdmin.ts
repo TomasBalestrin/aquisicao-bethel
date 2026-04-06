@@ -62,14 +62,21 @@ export async function deleteGestor(id: string): Promise<ActionResponse> {
 }
 
 export async function uploadAvatar(
-  userId: string, file: File
+  formData: FormData
 ): Promise<ActionResponseWithData<string>> {
   const denied = await assertHead();
   if (denied) return denied;
 
+  const userId = formData.get("userId") as string | null;
+  const file = formData.get("file") as File | null;
+
+  if (!userId || !file || file.size === 0) {
+    return { success: false, error: "Arquivo ou ID inválido" };
+  }
+
   const admin = createAdminClient();
   const ext = file.name.split(".").pop() ?? "png";
-  const path = `${userId}/avatar.${ext}`;
+  const path = `${userId}/${Date.now()}.${ext}`;
 
   const { error } = await admin.storage.from("avatars").upload(path, file, { upsert: true });
   if (error) return { success: false, error: "Erro no upload da foto" };

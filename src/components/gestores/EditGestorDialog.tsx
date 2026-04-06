@@ -37,7 +37,10 @@ export function EditGestorDialog({ open, onClose, gestorId, currentName, current
       const file = fileRef.current?.files?.[0];
       if (file) {
         setUploading(true);
-        const res = await uploadAvatar(gestorId, file);
+        const avatarFd = new FormData();
+        avatarFd.append("userId", gestorId);
+        avatarFd.append("file", file);
+        const res = await uploadAvatar(avatarFd);
         setUploading(false);
         if (!res.success) {
           toast.error(res.error ?? "Erro no upload da foto");

@@ -44,13 +44,20 @@ export async function updateProfile(
   return { success: true };
 }
 
-export async function uploadOwnAvatar(file: File): Promise<ActionResponseWithData<string>> {
+export async function uploadOwnAvatar(
+  formData: FormData
+): Promise<ActionResponseWithData<string>> {
   const user = await getCurrentUser();
   if (!user) return { success: false, error: "Não autenticado" };
 
+  const file = formData.get("file") as File | null;
+  if (!file || file.size === 0) {
+    return { success: false, error: "Nenhum arquivo selecionado" };
+  }
+
   const admin = createAdminClient();
   const ext = file.name.split(".").pop() ?? "png";
-  const path = `${user.id}/avatar.${ext}`;
+  const path = `${user.id}/${Date.now()}.${ext}`;
 
   const { error } = await admin.storage.from("avatars").upload(path, file, { upsert: true });
   if (error) return { success: false, error: "Erro no upload da foto" };
