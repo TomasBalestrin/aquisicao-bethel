@@ -17,7 +17,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const supabase = createClient();
-  const { data } = await supabase.from("planilhas").select("*").eq("id", params.planilhaId).single();
+  const { data } = await supabase.from("planilhas").select("mes, ano").eq("id", params.planilhaId).single();
   if (!data) return { title: "Planilha" };
   return { title: `${MESES[data.mes]} ${data.ano} — PerpetuoHQ` };
 }

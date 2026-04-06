@@ -46,7 +46,7 @@ export async function createPlanilha(
 
   const supabase = createClient();
   const { data: planilha, error } = await supabase
-    .from("planilhas").insert(parsed.data).select("*").single();
+    .from("planilhas").insert(parsed.data).select("id").single();
 
   if (error) {
     if (error.code === "23505") return { success: false, error: "Já existe planilha para este mês/ano" };
