@@ -76,7 +76,7 @@ export const SpreadsheetRow = memo(function SpreadsheetRow({ entry, columns, onU
 
         if (col.key === "data") {
           return (
-            <td key={col.key} className="border-r border-gray-200 px-2 py-1.5 font-table text-[12px] font-medium text-navy-70">
+            <td key={col.key} className="sticky left-0 z-10 border-r border-gray-200 bg-white px-2 py-1.5 font-table text-[12px] font-medium text-navy-70">
               {formatDate(entry.data)}
             </td>
           );

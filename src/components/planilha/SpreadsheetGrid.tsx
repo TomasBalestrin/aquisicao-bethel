@@ -52,49 +52,40 @@ export function SpreadsheetGrid({ entries: initial, planilhaId, planilha }: Prop
   }, []);
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Mobile KPIs */}
-      <div className="md:hidden">
-        <PlanilhaKPIs entries={entries} />
-      </div>
+    <div className="flex flex-col gap-4 overflow-hidden">
+      <PlanilhaKPIs entries={entries} />
 
-      {/* Desktop: KPIs left + table right */}
-      <div className="flex rounded-lg border border-gray-200">
-        {/* KPI panel (desktop only) */}
-        <PlanilhaKPIs entries={entries} />
-
-        {/* Table */}
-        <div className="flex-1 overflow-x-auto">
-          <table className="w-max min-w-full border-collapse">
-            <thead>
-              <tr>
-                {columns.map((col) => (
-                  <HeaderCell key={col.key} col={col} onHide={hideColumn} />
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {entries.map((entry) => (
-                <SpreadsheetRow key={entry.id} entry={entry} columns={columns} onUpdate={handleUpdate} />
+      <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-280px)] rounded-lg border border-gray-200">
+        <table className="min-w-max border-collapse">
+          <thead>
+            <tr>
+              {columns.map((col, i) => (
+                <HeaderCell key={col.key} col={col} onHide={hideColumn} isFirst={i === 0} />
               ))}
-            </tbody>
-            <tfoot>
-              <TotalsRow entries={entries} columns={columns} />
-            </tfoot>
-          </table>
-        </div>
+            </tr>
+          </thead>
+          <tbody>
+            {entries.map((entry) => (
+              <SpreadsheetRow key={entry.id} entry={entry} columns={columns} onUpdate={handleUpdate} />
+            ))}
+          </tbody>
+          <tfoot>
+            <TotalsRow entries={entries} columns={columns} />
+          </tfoot>
+        </table>
       </div>
     </div>
   );
 }
 
-function HeaderCell({ col, onHide }: { col: ColumnDef; onHide: (key: string) => void }) {
+function HeaderCell({ col, onHide, isFirst }: { col: ColumnDef; onHide: (key: string) => void; isFirst: boolean }) {
   const gc = GROUP_COLORS[col.group];
   const bgClass = !col.editable && col.key !== "data" ? "bg-[#3d5a80]" : gc?.header ?? "bg-navy-dark";
   const canHide = col.key !== "data";
+  const sticky = isFirst ? "sticky left-0 z-30" : "sticky top-0 z-20";
 
   return (
-    <th className={`${col.width} group/th relative whitespace-nowrap border-b border-r border-white/20 ${bgClass} px-2 py-2.5 text-left font-table text-[11px] font-semibold text-white`}>
+    <th className={`${col.width} ${sticky} group/th relative whitespace-nowrap border-b border-r border-white/20 ${bgClass} px-2 py-2.5 text-left font-table text-[11px] font-semibold text-white`}>
       {col.label}
       {canHide && (
         <button onClick={() => onHide(col.key)} className="absolute right-1 top-1/2 hidden -translate-y-1/2 rounded p-0.5 text-white/60 hover:text-white group-hover/th:block" title={`Ocultar ${col.label}`}>

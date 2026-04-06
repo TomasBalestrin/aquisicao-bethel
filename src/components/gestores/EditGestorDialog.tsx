@@ -33,30 +33,36 @@ export function EditGestorDialog({ open, onClose, gestorId, currentName, current
     const fd = new FormData(e.currentTarget);
     setLoading(true);
 
-    const file = fileRef.current?.files?.[0];
-    if (file) {
-      setUploading(true);
-      const res = await uploadAvatar(gestorId, file);
-      setUploading(false);
-      if (!res.success) {
-        toast.error(res.error ?? "Erro no upload da foto");
-        setLoading(false);
-        return;
+    try {
+      const file = fileRef.current?.files?.[0];
+      if (file) {
+        setUploading(true);
+        const res = await uploadAvatar(gestorId, file);
+        setUploading(false);
+        if (!res.success) {
+          toast.error(res.error ?? "Erro no upload da foto");
+          return;
+        }
+        toast.success("Foto atualizada");
       }
-      toast.success("Foto atualizada");
-    }
 
-    const result = await updateGestor(gestorId, {
-      name: fd.get("name") as string,
-      email: fd.get("email") as string,
-    });
+      const result = await updateGestor(gestorId, {
+        name: fd.get("name") as string,
+        email: fd.get("email") as string,
+      });
 
-    setLoading(false);
-    if (result.success) {
-      toast.success("Gestor atualizado");
-      onClose();
-    } else {
-      toast.error(result.error ?? "Erro ao atualizar");
+      if (result.success) {
+        toast.success("Gestor atualizado");
+        onClose();
+      } else {
+        toast.error(result.error ?? "Erro ao atualizar");
+      }
+    } catch (err) {
+      console.error("Erro ao salvar gestor:", err);
+      toast.error("Erro inesperado ao salvar");
+    } finally {
+      setUploading(false);
+      setLoading(false);
     }
   }
 
