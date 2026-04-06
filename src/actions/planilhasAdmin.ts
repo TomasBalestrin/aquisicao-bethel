@@ -29,7 +29,7 @@ export async function duplicatePlanilha(
     upsell_nome: og.upsell_nome, downsell_nome: og.downsell_nome,
     plat1_nome: og.plat1_nome, plat2_nome: og.plat2_nome, plat3_nome: og.plat3_nome,
     plat4_nome: og.plat4_nome, plat5_nome: og.plat5_nome,
-  }).select("*").single();
+  }).select("id, perpetuo_id").single();
 
   if (error) {
     if (error.code === "23505") return { success: false, error: "Já existe planilha para este mês/ano" };

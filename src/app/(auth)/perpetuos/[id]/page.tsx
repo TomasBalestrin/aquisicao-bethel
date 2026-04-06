@@ -4,14 +4,14 @@ import { PerpetuoDetail } from "@/components/perpetuos/PerpetuoDetail";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const supabase = createClient();
-  const { data } = await supabase.from("perpetuos").select("*").eq("id", params.id).single();
+  const { data } = await supabase.from("perpetuos").select("name").eq("id", params.id).single();
   return { title: data ? `${data.name} — PerpetuoHQ` : "Perpétuo" };
 }
 
 export default async function PerpetuoDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
 
-  const { data: perpetuo } = await supabase.from("perpetuos").select("*").eq("id", params.id).single();
+  const { data: perpetuo } = await supabase.from("perpetuos").select("id, name").eq("id", params.id).single();
   if (!perpetuo) notFound();
 
   const { data: planilhas } = await supabase
