@@ -47,27 +47,15 @@ export function PlanilhaKPIs({ entries }: Props) {
   ];
 
   return (
-    <>
-      {/* Mobile: horizontal cards */}
-      <div className="flex flex-wrap gap-3 md:hidden">
-        {kpis.map((k) => (
-          <div key={k.label} className="flex-1 min-w-[130px] rounded-lg border border-gray-200 bg-white p-3">
-            <p className="text-[10px] font-bold uppercase tracking-[1px] text-navy-70">{k.label}</p>
-            <p className={`mt-1 font-mono text-[16px] font-extrabold ${k.color}`}>{k.value}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Desktop: vertical panel (rendered inside SpreadsheetGrid flex) */}
-      <div className="hidden md:flex w-[200px] flex-shrink-0 flex-col gap-5 border-r border-gray-200 bg-white p-5">
-        <p className="text-[11px] font-bold uppercase tracking-[1.5px] text-gold">KPIs do Mês</p>
-        {kpis.map((k) => (
-          <div key={k.label}>
-            <p className="text-[10px] font-bold uppercase tracking-[1px] text-navy-70">{k.label}</p>
-            <p className={`mt-1 font-mono text-[22px] font-extrabold tracking-[-0.5px] ${k.color}`}>{k.value}</p>
-          </div>
-        ))}
-      </div>
-    </>
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      {kpis.map((k) => (
+        <div key={k.label} className="rounded-lg border border-gray-200 bg-white p-4">
+          <p className="text-[11px] font-bold uppercase tracking-[1px] text-navy-50">{k.label}</p>
+          <p className={`mt-1 font-mono text-[20px] font-extrabold tracking-[-0.5px] ${k.color}`}>
+            {k.value}
+          </p>
+        </div>
+      ))}
+    </div>
   );
 }

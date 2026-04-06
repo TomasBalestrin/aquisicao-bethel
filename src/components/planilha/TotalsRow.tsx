@@ -64,7 +64,7 @@ export function TotalsRow({ entries, columns }: Props) {
     <tr className="bg-gold-lightest font-semibold">
       {columns.map((col) => {
         if (col.key === "data") {
-          return <td key={col.key} className="border-r border-gold-lighter bg-gold-lightest px-2 py-2 font-table text-[12px] text-navy-dark">Total</td>;
+          return <td key={col.key} className="sticky left-0 z-10 border-r border-gold-lighter bg-gold-lightest px-2 py-2 font-table text-[12px] text-navy-dark">Total</td>;
         }
         const val = getTotal(entries, col.key);
         return (

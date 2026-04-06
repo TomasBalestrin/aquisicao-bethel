@@ -33,7 +33,7 @@ export default async function PlanilhaPage({ params }: Props) {
   const entries = result.data ?? [];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 overflow-hidden">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Link

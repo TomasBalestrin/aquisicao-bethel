@@ -127,3 +127,8 @@ FEITO:
 - [x] Fix upload de avatar dos gestores (loading state, feedback, toast)
 - [x] Sidebar condicional: gestor não vê Gestores/Configurações
 - [x] KPIs gerais do mês na planilha (Investimento, Faturamento, Lucro, Margem, CPA, Ticket Médio)
+- [x] KPIs em cards horizontais no topo (grid responsivo 2/3/6 cols)
+- [x] Scroll horizontal contido na tabela (body nunca scrola horizontalmente)
+- [x] Coluna "Dia" sticky à esquerda durante scroll horizontal
+- [x] Header da tabela sticky no topo durante scroll vertical
+- [x] Fix upload avatar: try/catch/finally para loading nunca ficar preso
