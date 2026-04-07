@@ -85,16 +85,18 @@ export function SpreadsheetGrid({ entries: initial, planilhaId, planilha }: Prop
 
 function HeaderCell({ col, onHide, isFirst }: { col: ColumnDef; onHide: (key: string) => void; isFirst: boolean }) {
   const gc = GROUP_COLORS[col.group];
-  const bgClass = !col.editable && col.key !== "data" ? "bg-[#3d5a80]" : gc?.header ?? "bg-navy-dark";
-  const txtClass = gc?.headerText ?? "text-white";
+  const fallbackBg = !col.editable && col.key !== "data" ? "bg-[#3d5a80]" : "bg-navy-dark";
   const canHide = col.key !== "data";
   const stickyClass = isFirst ? "sticky left-0 top-0 z-30" : "sticky top-0 z-20";
 
   return (
-    <th className={`${col.width} ${stickyClass} group/th relative whitespace-nowrap border-b border-r border-white/10 ${bgClass} px-2 py-2.5 text-left font-table text-[11px] font-semibold ${txtClass}`}>
+    <th
+      className={`${col.width} ${stickyClass} group/th relative whitespace-nowrap border-b border-r border-white/10 ${gc ? "" : fallbackBg} px-2 py-2.5 text-left font-table text-[11px] font-semibold ${gc ? "" : "text-white"}`}
+      style={gc ? { backgroundColor: gc.headerBg, color: gc.headerText } : undefined}
+    >
       {col.label}
       {canHide && (
-        <button onClick={() => onHide(col.key)} className="absolute right-1 top-1/2 hidden -translate-y-1/2 rounded p-0.5 text-white/60 hover:text-white group-hover/th:block" title={`Ocultar ${col.label}`}>
+        <button onClick={() => onHide(col.key)} className="absolute right-1 top-1/2 -translate-y-1/2 rounded p-0.5 opacity-0 transition-opacity hover:opacity-100 group-hover/th:opacity-60" title={`Ocultar ${col.label}`}>
           <EyeOff size={12} strokeWidth={2} />
         </button>
       )}

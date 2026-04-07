@@ -76,7 +76,6 @@ export const SpreadsheetRow = memo(function SpreadsheetRow({ entry, columns, onU
     <tr className="border-b border-gray-200">
       {columns.map((col) => {
         const gc = GROUP_COLORS[col.group];
-        const cellBg = gc?.cell ?? "";
 
         if (col.key === "data") {
           return (
@@ -88,14 +87,14 @@ export const SpreadsheetRow = memo(function SpreadsheetRow({ entry, columns, onU
         if (!col.editable) {
           const val = calc[col.key] ?? null;
           return (
-            <td key={col.key} className={`border-r border-gray-200 ${CALC_BG} px-2 py-1.5 font-table text-[12px] tabular-nums ${dynColor(col.key, val)}`}>
+            <td key={col.key} className={`border-r border-gray-200 px-2 py-1.5 font-table text-[12px] tabular-nums ${dynColor(col.key, val)}`} style={{ backgroundColor: gc?.cellBg || CALC_BG }}>
               {fmtCalc(val, col)}
             </td>
           );
         }
         const rawVal = entry[col.key as keyof DailyEntryRow] as number;
         return (
-          <td key={col.key} className={`border-r border-gray-200 ${cellBg} p-0`}>
+          <td key={col.key} className="border-r border-gray-200 p-0" style={gc?.cellBg ? { backgroundColor: gc.cellBg } : undefined}>
             <EditableCell entryId={entry.id} field={col.key} value={rawVal} isCurrency={col.isCurrency} isPercent={col.isPercent} onUpdate={handleCellUpdate} />
           </td>
         );
