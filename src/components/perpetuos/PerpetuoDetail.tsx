@@ -12,8 +12,8 @@ import { EditNomesDialog } from "@/components/planilha/EditNomesDialog";
 import { deletePlanilha } from "@/actions/planilhas";
 
 interface PlanilhaNomes {
-  ob1_nome: string; ob2_nome: string; ob3_nome: string;
-  ob4_nome: string; ob5_nome: string; ob6_nome: string;
+  ob1_nome: string; ob2_nome: string; ob3_nome: string; ob4_nome: string; ob5_nome: string;
+  ob6_nome: string; ob7_nome: string; ob8_nome: string; ob9_nome: string; ob10_nome: string;
   upsell_nome: string; downsell_nome: string;
   plat1_nome: string; plat2_nome: string; plat3_nome: string;
   plat4_nome: string; plat5_nome: string;
@@ -105,7 +105,7 @@ export function PerpetuoDetail({ perpetuoId, perpetuoName, planilhas }: Props) {
 
       <CreatePlanilhaDialog open={showCreate} onClose={() => setShowCreate(false)} perpetuoId={perpetuoId} />
       {dupTarget && <DuplicatePlanilhaDialog open onClose={() => setDupTarget(null)} planilhaId={dupTarget.id} perpetuoId={perpetuoId} currentMes={dupTarget.mes} currentAno={dupTarget.ano} />}
-      {editTarget && <EditNomesDialog open onClose={() => setEditTarget(null)} planilhaId={editTarget.id} perpetuoId={perpetuoId} nomes={{ ob1_nome: editTarget.ob1_nome, ob2_nome: editTarget.ob2_nome, ob3_nome: editTarget.ob3_nome, ob4_nome: editTarget.ob4_nome, ob5_nome: editTarget.ob5_nome, ob6_nome: editTarget.ob6_nome, upsell_nome: editTarget.upsell_nome, downsell_nome: editTarget.downsell_nome, plat1_nome: editTarget.plat1_nome, plat2_nome: editTarget.plat2_nome, plat3_nome: editTarget.plat3_nome, plat4_nome: editTarget.plat4_nome, plat5_nome: editTarget.plat5_nome }} />}
+      {editTarget && <EditNomesDialog open onClose={() => setEditTarget(null)} planilhaId={editTarget.id} perpetuoId={perpetuoId} nomes={editTarget} />}
 
       {deleteTarget && (
         <Modal open onClose={() => setDeleteTarget(null)} title="Excluir Planilha">

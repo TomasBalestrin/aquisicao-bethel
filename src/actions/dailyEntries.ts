@@ -13,6 +13,8 @@ const EDITABLE_FIELDS = [
   "ob1_faturado", "ob1_vendas", "ob2_faturado", "ob2_vendas",
   "ob3_faturado", "ob3_vendas", "ob4_faturado", "ob4_vendas",
   "ob5_faturado", "ob5_vendas", "ob6_faturado", "ob6_vendas",
+  "ob7_faturado", "ob7_vendas", "ob8_faturado", "ob8_vendas",
+  "ob9_faturado", "ob9_vendas", "ob10_faturado", "ob10_vendas",
   "upsell_faturado", "upsell_vendas",
   "downsell_faturado", "downsell_vendas",
   "ctr", "page_view", "initiate_checkout", "cpm", "cliques_link", "carregamento",

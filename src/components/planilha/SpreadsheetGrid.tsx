@@ -14,6 +14,7 @@ interface Props {
   planilha: {
     ob1_nome: string; ob2_nome: string; ob3_nome: string;
     ob4_nome: string; ob5_nome: string; ob6_nome: string;
+    ob7_nome: string; ob8_nome: string; ob9_nome: string; ob10_nome: string;
     upsell_nome: string; downsell_nome: string;
     plat1_nome: string; plat2_nome: string; plat3_nome: string;
     plat4_nome: string; plat5_nome: string;
@@ -85,13 +86,12 @@ export function SpreadsheetGrid({ entries: initial, planilhaId, planilha }: Prop
 function HeaderCell({ col, onHide, isFirst }: { col: ColumnDef; onHide: (key: string) => void; isFirst: boolean }) {
   const gc = GROUP_COLORS[col.group];
   const bgClass = !col.editable && col.key !== "data" ? "bg-[#3d5a80]" : gc?.header ?? "bg-navy-dark";
+  const txtClass = gc?.headerText ?? "text-white";
   const canHide = col.key !== "data";
-  const stickyClass = isFirst
-    ? "sticky left-0 top-0 z-30"
-    : "sticky top-0 z-20";
+  const stickyClass = isFirst ? "sticky left-0 top-0 z-30" : "sticky top-0 z-20";
 
   return (
-    <th className={`${col.width} ${stickyClass} group/th relative whitespace-nowrap border-b border-r border-white/20 ${bgClass} px-2 py-2.5 text-left font-table text-[11px] font-semibold text-white`}>
+    <th className={`${col.width} ${stickyClass} group/th relative whitespace-nowrap border-b border-r border-white/10 ${bgClass} px-2 py-2.5 text-left font-table text-[11px] font-semibold ${txtClass}`}>
       {col.label}
       {canHide && (
         <button onClick={() => onHide(col.key)} className="absolute right-1 top-1/2 hidden -translate-y-1/2 rounded p-0.5 text-white/60 hover:text-white group-hover/th:block" title={`Ocultar ${col.label}`}>

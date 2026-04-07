@@ -29,6 +29,7 @@ export function CreatePlanilhaDialog({ open, onClose, perpetuoId }: Props) {
       mes: Number(fd.get("mes")), ano: Number(fd.get("ano")),
       ob1_nome: getField(fd,"ob1"), ob2_nome: getField(fd,"ob2"), ob3_nome: getField(fd,"ob3"),
       ob4_nome: getField(fd,"ob4"), ob5_nome: getField(fd,"ob5"), ob6_nome: getField(fd,"ob6"),
+      ob7_nome: getField(fd,"ob7"), ob8_nome: getField(fd,"ob8"), ob9_nome: getField(fd,"ob9"), ob10_nome: getField(fd,"ob10"),
       upsell_nome: getField(fd,"upsell"), downsell_nome: getField(fd,"downsell"),
       plat1_nome: getField(fd,"plat1"), plat2_nome: getField(fd,"plat2"), plat3_nome: getField(fd,"plat3"),
       plat4_nome: getField(fd,"plat4"), plat5_nome: getField(fd,"plat5"),
@@ -63,7 +64,7 @@ export function CreatePlanilhaDialog({ open, onClose, perpetuoId }: Props) {
         ))}
 
         <p className={sectionCls}>Order Bumps</p>
-        {[1,2,3,4,5,6].map(n=>(
+        {[1,2,3,4,5,6,7,8,9,10].map(n=>(
           <div key={`ob${n}`} className="flex flex-col gap-1">
             <label htmlFor={`ob${n}`} className={labelCls}>Order Bump {n}</label>
             <input id={`ob${n}`} name={`ob${n}`} placeholder={`Order Bump ${n}`} className={inputCls}/>

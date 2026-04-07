@@ -28,6 +28,7 @@ export function calcFatPrincipal(e: DailyEntryRow): number {
 export function calcTotalFunil(e: DailyEntryRow): number {
   return e.ob1_faturado + e.ob2_faturado + e.ob3_faturado
     + e.ob4_faturado + e.ob5_faturado + e.ob6_faturado
+    + e.ob7_faturado + e.ob8_faturado + e.ob9_faturado + e.ob10_faturado
     + e.upsell_faturado + e.downsell_faturado;
 }
 
