@@ -8,6 +8,7 @@ import { updatePlanilhaNomes } from "@/actions/planilhasAdmin";
 interface Nomes {
   ob1_nome: string; ob2_nome: string; ob3_nome: string;
   ob4_nome: string; ob5_nome: string; ob6_nome: string;
+  ob7_nome: string; ob8_nome: string; ob9_nome: string; ob10_nome: string;
   upsell_nome: string; downsell_nome: string;
   plat1_nome: string; plat2_nome: string; plat3_nome: string;
   plat4_nome: string; plat5_nome: string;
@@ -26,36 +27,35 @@ export function EditNomesDialog({ open, onClose, planilhaId, perpetuoId, nomes }
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     setLoading(true);
+    const g = (n: string) => fd.get(n) as string;
     const result = await updatePlanilhaNomes({
       id: planilhaId, perpetuo_id: perpetuoId,
-      ob1_nome: fd.get("ob1") as string, ob2_nome: fd.get("ob2") as string,
-      ob3_nome: fd.get("ob3") as string, ob4_nome: fd.get("ob4") as string,
-      ob5_nome: fd.get("ob5") as string, ob6_nome: fd.get("ob6") as string,
-      upsell_nome: fd.get("upsell") as string, downsell_nome: fd.get("downsell") as string,
-      plat1_nome: fd.get("plat1") as string, plat2_nome: fd.get("plat2") as string,
-      plat3_nome: fd.get("plat3") as string, plat4_nome: fd.get("plat4") as string,
-      plat5_nome: fd.get("plat5") as string,
+      ob1_nome: g("ob1"), ob2_nome: g("ob2"), ob3_nome: g("ob3"), ob4_nome: g("ob4"), ob5_nome: g("ob5"),
+      ob6_nome: g("ob6"), ob7_nome: g("ob7"), ob8_nome: g("ob8"), ob9_nome: g("ob9"), ob10_nome: g("ob10"),
+      upsell_nome: g("upsell"), downsell_nome: g("downsell"),
+      plat1_nome: g("plat1"), plat2_nome: g("plat2"), plat3_nome: g("plat3"), plat4_nome: g("plat4"), plat5_nome: g("plat5"),
     });
     setLoading(false);
     if (result.success) { toast.success("Nomes atualizados"); onClose(); }
     else toast.error(result.error ?? "Erro ao salvar");
   }
 
-  const fields: [string, string, string][] = [
+  const platFields: [string, string, string][] = [
     ["plat1","Plataforma 1", nomes.plat1_nome], ["plat2","Plataforma 2", nomes.plat2_nome],
     ["plat3","Plataforma 3", nomes.plat3_nome], ["plat4","Plataforma 4", nomes.plat4_nome],
     ["plat5","Plataforma 5", nomes.plat5_nome],
   ];
-  const obFields: [string, string, string][] = [
-    ["ob1","OB 1", nomes.ob1_nome], ["ob2","OB 2", nomes.ob2_nome], ["ob3","OB 3", nomes.ob3_nome],
-    ["ob4","OB 4", nomes.ob4_nome], ["ob5","OB 5", nomes.ob5_nome], ["ob6","OB 6", nomes.ob6_nome],
-  ];
+  const obFields: [string, string, string][] = Array.from({ length: 10 }, (_, i) => {
+    const n = i + 1;
+    const key = `ob${n}` as keyof Nomes;
+    return [`ob${n}`, `OB ${n}`, nomes[key]];
+  });
 
   return (
     <Modal open={open} onClose={onClose} title="Editar Nomes">
       <form onSubmit={handleSubmit} className="flex max-h-[70vh] flex-col gap-3 overflow-y-auto pr-1">
         <p className={sectionCls}>Plataformas</p>
-        {fields.map(([n,l,v])=>(<div key={n} className="flex flex-col gap-1"><label htmlFor={`en-${n}`} className={labelCls}>{l}</label><input id={`en-${n}`} name={n} defaultValue={v} className={inputCls}/></div>))}
+        {platFields.map(([n,l,v])=>(<div key={n} className="flex flex-col gap-1"><label htmlFor={`en-${n}`} className={labelCls}>{l}</label><input id={`en-${n}`} name={n} defaultValue={v} className={inputCls}/></div>))}
         <p className={sectionCls}>Order Bumps</p>
         {obFields.map(([n,l,v])=>(<div key={n} className="flex flex-col gap-1"><label htmlFor={`en-${n}`} className={labelCls}>{l}</label><input id={`en-${n}`} name={n} defaultValue={v} className={inputCls}/></div>))}
         <p className={sectionCls}>Upsell / Downsell</p>

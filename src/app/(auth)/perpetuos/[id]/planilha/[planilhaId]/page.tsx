@@ -64,6 +64,8 @@ export default async function PlanilhaPage({ params }: Props) {
             ob1_nome: planilha.ob1_nome, ob2_nome: planilha.ob2_nome,
             ob3_nome: planilha.ob3_nome, ob4_nome: planilha.ob4_nome,
             ob5_nome: planilha.ob5_nome, ob6_nome: planilha.ob6_nome,
+            ob7_nome: planilha.ob7_nome, ob8_nome: planilha.ob8_nome,
+            ob9_nome: planilha.ob9_nome, ob10_nome: planilha.ob10_nome,
             upsell_nome: planilha.upsell_nome, downsell_nome: planilha.downsell_nome,
             plat1_nome: planilha.plat1_nome, plat2_nome: planilha.plat2_nome,
             plat3_nome: planilha.plat3_nome, plat4_nome: planilha.plat4_nome,

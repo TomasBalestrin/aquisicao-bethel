@@ -35,6 +35,10 @@ function getTotal(es: DailyEntryRow[], key: string): number | null {
     case "ob4_taxa": return safeDivide(sum(es, "ob4_vendas") * 100, vp);
     case "ob5_taxa": return safeDivide(sum(es, "ob5_vendas") * 100, vp);
     case "ob6_taxa": return safeDivide(sum(es, "ob6_vendas") * 100, vp);
+    case "ob7_taxa": return safeDivide(sum(es, "ob7_vendas") * 100, vp);
+    case "ob8_taxa": return safeDivide(sum(es, "ob8_vendas") * 100, vp);
+    case "ob9_taxa": return safeDivide(sum(es, "ob9_vendas") * 100, vp);
+    case "ob10_taxa": return safeDivide(sum(es, "ob10_vendas") * 100, vp);
     case "upsell_taxa": return safeDivide(sum(es, "upsell_vendas") * 100, vp);
     case "downsell_taxa": return safeDivide(sum(es, "downsell_vendas") * 100, vp);
     case "conv_pag_check": return safeDivide(sum(es, "initiate_checkout") * 100, sum(es, "page_view"));

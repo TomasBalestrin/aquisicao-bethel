@@ -25,6 +25,14 @@ export type DailyEntryRow = {
   ob5_vendas: number;
   ob6_faturado: number;
   ob6_vendas: number;
+  ob7_faturado: number;
+  ob7_vendas: number;
+  ob8_faturado: number;
+  ob8_vendas: number;
+  ob9_faturado: number;
+  ob9_vendas: number;
+  ob10_faturado: number;
+  ob10_vendas: number;
   upsell_faturado: number;
   upsell_vendas: number;
   downsell_faturado: number;
@@ -39,45 +47,9 @@ export type DailyEntryRow = {
   updated_at: string;
 };
 
-export type DailyEntryInsert = {
-  id?: string;
+export type DailyEntryInsert = Partial<Omit<DailyEntryRow, "id">> & {
   planilha_id: string;
   data: string;
-  investimento?: number;
-  plat1_vendas?: number;
-  plat1_faturado?: number;
-  plat2_vendas?: number;
-  plat2_faturado?: number;
-  plat3_vendas?: number;
-  plat3_faturado?: number;
-  plat4_vendas?: number;
-  plat4_faturado?: number;
-  plat5_vendas?: number;
-  plat5_faturado?: number;
-  ob1_faturado?: number;
-  ob1_vendas?: number;
-  ob2_faturado?: number;
-  ob2_vendas?: number;
-  ob3_faturado?: number;
-  ob3_vendas?: number;
-  ob4_faturado?: number;
-  ob4_vendas?: number;
-  ob5_faturado?: number;
-  ob5_vendas?: number;
-  ob6_faturado?: number;
-  ob6_vendas?: number;
-  upsell_faturado?: number;
-  upsell_vendas?: number;
-  downsell_faturado?: number;
-  downsell_vendas?: number;
-  ctr?: number;
-  page_view?: number;
-  initiate_checkout?: number;
-  cpm?: number;
-  cliques_link?: number;
-  carregamento?: number;
-  created_at?: string;
-  updated_at?: string;
 };
 
 export type DailyEntryUpdate = Partial<DailyEntryInsert>;

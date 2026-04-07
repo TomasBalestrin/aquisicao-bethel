@@ -26,6 +26,7 @@ export async function duplicatePlanilha(
     perpetuo_id: og.perpetuo_id, mes: parsed.data.mes, ano: parsed.data.ano,
     ob1_nome: og.ob1_nome, ob2_nome: og.ob2_nome, ob3_nome: og.ob3_nome,
     ob4_nome: og.ob4_nome, ob5_nome: og.ob5_nome, ob6_nome: og.ob6_nome,
+    ob7_nome: og.ob7_nome, ob8_nome: og.ob8_nome, ob9_nome: og.ob9_nome, ob10_nome: og.ob10_nome,
     upsell_nome: og.upsell_nome, downsell_nome: og.downsell_nome,
     plat1_nome: og.plat1_nome, plat2_nome: og.plat2_nome, plat3_nome: og.plat3_nome,
     plat4_nome: og.plat4_nome, plat5_nome: og.plat5_nome,
@@ -50,8 +51,8 @@ export async function duplicatePlanilha(
 const n50 = z.string().max(50);
 const nomesSchema = z.object({
   id: z.string().uuid(), perpetuo_id: z.string().uuid(),
-  ob1_nome: n50, ob2_nome: n50, ob3_nome: n50,
-  ob4_nome: n50, ob5_nome: n50, ob6_nome: n50,
+  ob1_nome: n50, ob2_nome: n50, ob3_nome: n50, ob4_nome: n50, ob5_nome: n50,
+  ob6_nome: n50, ob7_nome: n50, ob8_nome: n50, ob9_nome: n50, ob10_nome: n50,
   upsell_nome: n50, downsell_nome: n50,
   plat1_nome: n50, plat2_nome: n50, plat3_nome: n50,
   plat4_nome: n50, plat5_nome: n50,
