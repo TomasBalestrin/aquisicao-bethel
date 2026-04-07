@@ -85,7 +85,7 @@ export function SpreadsheetGrid({ entries: initial, planilhaId, planilha }: Prop
 
 function HeaderCell({ col, onHide, isFirst }: { col: ColumnDef; onHide: (key: string) => void; isFirst: boolean }) {
   const gc = GROUP_COLORS[col.group];
-  const bgClass = !col.editable && col.key !== "data" ? "bg-[#3d5a80]" : gc?.header ?? "bg-navy-dark";
+  const bgClass = gc?.header ?? (!col.editable && col.key !== "data" ? "bg-[#3d5a80]" : "bg-navy-dark");
   const txtClass = gc?.headerText ?? "text-white";
   const canHide = col.key !== "data";
   const stickyClass = isFirst ? "sticky left-0 top-0 z-30" : "sticky top-0 z-20";

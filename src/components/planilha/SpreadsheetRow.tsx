@@ -88,7 +88,7 @@ export const SpreadsheetRow = memo(function SpreadsheetRow({ entry, columns, onU
         if (!col.editable) {
           const val = calc[col.key] ?? null;
           return (
-            <td key={col.key} className={`border-r border-gray-200 ${CALC_BG} px-2 py-1.5 font-table text-[12px] tabular-nums ${dynColor(col.key, val)}`}>
+            <td key={col.key} className={`border-r border-gray-200 ${gc?.cell || CALC_BG} px-2 py-1.5 font-table text-[12px] tabular-nums ${dynColor(col.key, val)}`}>
               {fmtCalc(val, col)}
             </td>
           );
