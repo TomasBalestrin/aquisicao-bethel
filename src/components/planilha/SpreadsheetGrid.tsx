@@ -96,7 +96,7 @@ function HeaderCell({ col, onHide, isFirst }: { col: ColumnDef; onHide: (key: st
     >
       {col.label}
       {canHide && (
-        <button onClick={() => onHide(col.key)} className="absolute right-1 top-1/2 hidden -translate-y-1/2 rounded p-0.5 opacity-0 transition-opacity hover:opacity-100 group-hover/th:opacity-60" title={`Ocultar ${col.label}`}>
+        <button onClick={() => onHide(col.key)} className="absolute right-1 top-1/2 -translate-y-1/2 rounded p-0.5 opacity-0 transition-opacity hover:opacity-100 group-hover/th:opacity-60" title={`Ocultar ${col.label}`}>
           <EyeOff size={12} strokeWidth={2} />
         </button>
       )}
