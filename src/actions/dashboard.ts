@@ -78,7 +78,7 @@ export async function getDashboardData(filters: Filters): Promise<DashboardResul
     data: {
       metrics: {
         investido, faturamento, lucro,
-        margem: safeDivide(lucro * 100, faturamento),
+        margem: safeDivide(lucro * 100, investido),
         cpa: safeDivide(investido, vendas),
         ticketMedio: safeDivide(faturamento, vendas),
       },
