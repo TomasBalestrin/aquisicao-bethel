@@ -49,7 +49,7 @@ export const SpreadsheetRow = memo(function SpreadsheetRow({ entry, columns, onU
     const lucro = ft - entry.investimento;
     return {
       fat_total: ft, lucro, vendas_principal: vp,
-      margem: ft === 0 ? null : (lucro / ft) * 100,
+      margem: entry.investimento === 0 ? null : (lucro / entry.investimento) * 100,
       fat_principal: calcFatPrincipal(entry),
       total_funil: calcTotalFunil(entry),
       cpa: safeDivide(entry.investimento, vp),

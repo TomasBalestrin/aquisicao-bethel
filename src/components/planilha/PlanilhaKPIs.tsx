@@ -27,7 +27,7 @@ export function PlanilhaKPIs({ entries }: Props) {
     const lucro = fat - inv;
     return {
       inv, fat, lucro,
-      margem: safeDivide(lucro * 100, fat),
+      margem: safeDivide(lucro * 100, inv),
       cpa: safeDivide(inv, vd),
       ticket: safeDivide(fat, vd),
     };

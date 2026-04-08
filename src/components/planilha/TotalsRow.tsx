@@ -23,7 +23,7 @@ function getTotal(es: DailyEntryRow[], key: string): number | null {
     case "data": return null;
     case "fat_total": return fat;
     case "lucro": return lucro;
-    case "margem": return safeDivide(lucro * 100, fat);
+    case "margem": return safeDivide(lucro * 100, sum(es, "investimento"));
     case "vendas_principal": return vp;
     case "fat_principal": return es.reduce((a, e) => a + calcFatPrincipal(e), 0);
     case "total_funil": return es.reduce((a, e) => a + calcTotalFunil(e), 0);
