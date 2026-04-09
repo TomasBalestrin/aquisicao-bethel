@@ -9,45 +9,60 @@ const metaSchema = z.object({
   value: z.number().int().min(0, "Meta deve ser positiva"),
 });
 
-export async function getMetaFaturamento(): Promise<ActionResponseWithData<number>> {
-  const user = await getCurrentUser();
-  if (!user) return { success: false, error: "Não autenticado" };
-
+async function getSetting(key: string): Promise<number> {
   const admin = createAdminClient();
   const { data } = await admin
     .from("settings")
     .select("value")
-    .eq("key", "meta_faturamento")
+    .eq("key", key)
     .single();
-
-  return { success: true, data: data ? parseInt(data.value, 10) : 0 };
+  return data ? parseInt(data.value, 10) : 0;
 }
 
-export async function updateMetaFaturamento(
-  cents: number
-): Promise<ActionResponse> {
-  const user = await getCurrentUser();
-  if (!user || user.role !== "head") {
-    return { success: false, error: "Apenas Head pode alterar a meta" };
-  }
-
-  const parsed = metaSchema.safeParse({ value: cents });
-  if (!parsed.success) {
-    return { success: false, error: parsed.error.issues[0]?.message ?? "Valor inválido" };
-  }
-
+async function upsertSetting(key: string, value: number): Promise<ActionResponse> {
   const admin = createAdminClient();
   const { error } = await admin
     .from("settings")
     .upsert(
-      {
-        key: "meta_faturamento",
-        value: String(parsed.data.value),
-        updated_at: new Date().toISOString(),
-      },
+      { key, value: String(value), updated_at: new Date().toISOString() },
       { onConflict: "key" }
     );
-
-  if (error) return { success: false, error: "Erro ao salvar meta" };
+  if (error) return { success: false, error: "Erro ao salvar configuração" };
   return { success: true };
+}
+
+export async function getMetaFaturamento(): Promise<ActionResponseWithData<number>> {
+  const user = await getCurrentUser();
+  if (!user) return { success: false, error: "Não autenticado" };
+  return { success: true, data: await getSetting("meta_faturamento") };
+}
+
+export async function getMetaLucroSemanal(): Promise<ActionResponseWithData<number>> {
+  const user = await getCurrentUser();
+  if (!user) return { success: false, error: "Não autenticado" };
+  return { success: true, data: await getSetting("meta_lucro_semanal") };
+}
+
+export async function updateMetaFaturamento(cents: number): Promise<ActionResponse> {
+  const user = await getCurrentUser();
+  if (!user || user.role !== "head") {
+    return { success: false, error: "Apenas Head pode alterar a meta" };
+  }
+  const parsed = metaSchema.safeParse({ value: cents });
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? "Valor inválido" };
+  }
+  return upsertSetting("meta_faturamento", parsed.data.value);
+}
+
+export async function updateMetaLucroSemanal(cents: number): Promise<ActionResponse> {
+  const user = await getCurrentUser();
+  if (!user || user.role !== "head") {
+    return { success: false, error: "Apenas Head pode alterar a meta" };
+  }
+  const parsed = metaSchema.safeParse({ value: cents });
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? "Valor inválido" };
+  }
+  return upsertSetting("meta_lucro_semanal", parsed.data.value);
 }

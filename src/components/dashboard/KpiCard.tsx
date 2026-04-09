@@ -19,7 +19,7 @@ export function KpiCard({ label, value, color }: Props) {
       <span
         className="font-table font-bold"
         style={{
-          fontSize: 19,
+          fontSize: 22,
           letterSpacing: -0.3,
           color: color ?? "#001321",
         }}

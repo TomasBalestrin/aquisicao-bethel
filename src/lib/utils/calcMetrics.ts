@@ -41,8 +41,7 @@ export function calcLucro(e: DailyEntryRow): number {
 }
 
 export function calcMargem(e: DailyEntryRow): number | null {
-  const fat = calcFaturamentoTotal(e);
-  return safeDivide(calcLucro(e) * 100, fat);
+  return safeDivide(calcLucro(e) * 100, e.investimento);
 }
 
 export function calcCpa(e: DailyEntryRow): number | null {
