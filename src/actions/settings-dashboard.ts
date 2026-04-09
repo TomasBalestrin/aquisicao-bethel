@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "./auth";
 import type { ActionResponse, ActionResponseWithData } from "@/types/action";
 
@@ -13,8 +13,8 @@ export async function getMetaFaturamento(): Promise<ActionResponseWithData<numbe
   const user = await getCurrentUser();
   if (!user) return { success: false, error: "Não autenticado" };
 
-  const supabase = createClient();
-  const { data } = await supabase
+  const admin = createAdminClient();
+  const { data } = await admin
     .from("settings")
     .select("value")
     .eq("key", "meta_faturamento")
@@ -36,8 +36,8 @@ export async function updateMetaFaturamento(
     return { success: false, error: parsed.error.issues[0]?.message ?? "Valor inválido" };
   }
 
-  const supabase = createClient();
-  const { error } = await supabase
+  const admin = createAdminClient();
+  const { error } = await admin
     .from("settings")
     .upsert(
       {

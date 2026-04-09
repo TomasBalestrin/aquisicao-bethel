@@ -11,12 +11,18 @@ interface Props {
 export function HalfMoonChart({ current, target, size = 260 }: Props) {
   const pct = target > 0 ? Math.min(current / target, 1) : 0;
   const pctLabel = Math.round(pct * 100);
+
+  const strokeW = Math.round(size * 0.07);
+  const r = (size - strokeW) / 2 - 4;
   const cx = size / 2;
-  const cy = size * 0.52;
-  const r = size * 0.38;
-  const stroke = size * 0.075;
+  const cy = r + strokeW / 2 + 4;
+  const svgH = cy + strokeW / 2 + 6;
   const halfCirc = Math.PI * r;
   const dashOffset = halfCirc * (1 - pct);
+
+  const leftX = cx - r;
+  const rightX = cx + r;
+  const arcPath = `M ${leftX} ${cy} A ${r} ${r} 0 0 1 ${rightX} ${cy}`;
 
   return (
     <div
@@ -29,7 +35,11 @@ export function HalfMoonChart({ current, target, size = 260 }: Props) {
       >
         META DO MÊS
       </span>
-      <svg width={size} height={size * 0.58} viewBox={`0 0 ${size} ${size * 0.58}`}>
+      <svg
+        width={size}
+        height={svgH}
+        viewBox={`0 0 ${size} ${svgH}`}
+      >
         <defs>
           <linearGradient id="moon-grad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#001321" />
@@ -38,26 +48,26 @@ export function HalfMoonChart({ current, target, size = 260 }: Props) {
         </defs>
         {/* Track */}
         <path
-          d={describeArc(cx, cy, r, 180, 360)}
+          d={arcPath}
           fill="none"
           stroke="#ECEDF0"
-          strokeWidth={stroke}
+          strokeWidth={strokeW}
           strokeLinecap="round"
         />
         {/* Fill */}
         <path
-          d={describeArc(cx, cy, r, 180, 360)}
+          d={arcPath}
           fill="none"
           stroke="url(#moon-grad)"
-          strokeWidth={stroke}
+          strokeWidth={strokeW}
           strokeLinecap="round"
           strokeDasharray={halfCirc}
           strokeDashoffset={dashOffset}
         />
-        {/* Center text */}
+        {/* Percentage */}
         <text
           x={cx}
-          y={cy - size * 0.04}
+          y={cy - r * 0.3}
           textAnchor="middle"
           fontFamily="var(--font-poppins), Poppins, sans-serif"
           fontWeight={700}
@@ -66,9 +76,10 @@ export function HalfMoonChart({ current, target, size = 260 }: Props) {
         >
           {pctLabel}%
         </text>
+        {/* Subtitle */}
         <text
           x={cx}
-          y={cy + size * 0.04}
+          y={cy - r * 0.08}
           textAnchor="middle"
           fontFamily="var(--font-poppins), Poppins, sans-serif"
           fontWeight={500}
@@ -80,27 +91,4 @@ export function HalfMoonChart({ current, target, size = 260 }: Props) {
       </svg>
     </div>
   );
-}
-
-function describeArc(
-  cx: number,
-  cy: number,
-  r: number,
-  startAngle: number,
-  endAngle: number
-): string {
-  const start = polarToCartesian(cx, cy, r, endAngle);
-  const end = polarToCartesian(cx, cy, r, startAngle);
-  const largeArc = endAngle - startAngle <= 180 ? "0" : "1";
-  return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 0 ${end.x} ${end.y}`;
-}
-
-function polarToCartesian(
-  cx: number,
-  cy: number,
-  r: number,
-  angle: number
-): { x: number; y: number } {
-  const rad = ((angle - 90) * Math.PI) / 180;
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
