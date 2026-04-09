@@ -26,11 +26,10 @@ export function DashboardClient({
 
   const totals = computeTotals(perpetuos);
   const totalAlunos = perpetuos.reduce((s, p) => s + p.vendas, 0);
-  const diasPreenchidos = Math.max(...perpetuos.map((p) => p.diasPreenchidos), 0);
   const exitPresent = useCallback(() => setPresenting(false), []);
 
   const shared = {
-    perpetuos, totals, totalAlunos, diasPreenchidos, meta, diasNoMes,
+    perpetuos, totals, totalAlunos, meta, diasNoMes,
     mesAtual, anoAtual, isHead, presenting,
     onOpenSettings: () => setShowSettings(true),
     onPresent: () => setPresenting(true),
