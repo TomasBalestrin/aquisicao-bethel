@@ -2,13 +2,10 @@
 
 import { Settings, Users, Presentation } from "lucide-react";
 import { HalfMoonChart } from "./HalfMoonChart";
-import { KpiCard } from "./KpiCard";
+import { KpiGrid } from "./KpiGrid";
 import { PerpetuoCard } from "./PerpetuoCard";
-import { fm, formatPercent } from "@/lib/utils/formatCurrency";
 import type { PerpetuoDashboard } from "@/types/dashboard";
 
-const POS = "#1B8A2A";
-const NEG = "#C62828";
 const MONTHS = [
   "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
@@ -18,6 +15,7 @@ interface Props {
   perpetuos: PerpetuoDashboard[];
   totals: { investimento: number; faturamento: number; lucro: number; margem: number | null };
   totalAlunos: number;
+  diasPreenchidos: number;
   meta: number;
   moonSize: number;
   diasNoMes: number;
@@ -30,7 +28,7 @@ interface Props {
 }
 
 export function DashboardContent({
-  perpetuos, totals, totalAlunos, meta, moonSize,
+  perpetuos, totals, totalAlunos, diasPreenchidos, meta, moonSize,
   diasNoMes, mesAtual, anoAtual, isHead, presenting,
   onOpenSettings, onPresent,
 }: Props) {
@@ -62,12 +60,7 @@ export function DashboardContent({
       <div className="flex gap-[14px]">
         <div className="flex flex-1 items-center gap-6" style={{ background: "#fff", border: "1px solid #ECEDF0", borderRadius: 14, padding: "18px 24px" }}>
           <HalfMoonChart current={totals.faturamento} target={meta} size={moonSize} />
-          <div className="grid flex-1 grid-cols-2 gap-[10px]">
-            <KpiCard label="Investimento" value={fm(totals.investimento)} />
-            <KpiCard label="Faturamento" value={fm(totals.faturamento)} />
-            <KpiCard label="Lucro" value={fm(totals.lucro)} color={totals.lucro > 0 ? POS : totals.lucro < 0 ? NEG : undefined} />
-            <KpiCard label="Margem" value={formatPercent(totals.margem)} color={totals.margem !== null ? totals.margem > 0 ? POS : totals.margem < 0 ? NEG : undefined : undefined} />
-          </div>
+          <KpiGrid totals={totals} diasPreenchidos={diasPreenchidos} diasNoMes={diasNoMes} />
         </div>
         <div className="flex flex-col items-center justify-center" style={{ minWidth: 160, background: "#fff", border: "1px solid #ECEDF0", borderRadius: 14, padding: "24px 20px" }}>
           <span className="uppercase tracking-[1.2px] font-semibold" style={{ fontSize: 9.5, color: "#B19365", marginBottom: 10 }}>ALUNOS NO MÊS</span>
