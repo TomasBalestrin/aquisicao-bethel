@@ -10,6 +10,8 @@ import type { PerpetuoDashboard } from "@/types/dashboard";
 interface Props {
   perpetuos: PerpetuoDashboard[];
   metaFaturamento: number;
+  metaLucroSemanal: number;
+  lucroSemana: number;
   diasNoMes: number;
   mesAtual: number;
   anoAtual: number;
@@ -17,10 +19,12 @@ interface Props {
 }
 
 export function DashboardClient({
-  perpetuos, metaFaturamento: initialMeta,
+  perpetuos, metaFaturamento: initMetaFat,
+  metaLucroSemanal: initMetaSem, lucroSemana,
   diasNoMes, mesAtual, anoAtual, isHead,
 }: Props) {
-  const [meta, setMeta] = useState(initialMeta);
+  const [metaFat, setMetaFat] = useState(initMetaFat);
+  const [metaSem, setMetaSem] = useState(initMetaSem);
   const [showSettings, setShowSettings] = useState(false);
   const [presenting, setPresenting] = useState(false);
 
@@ -30,7 +34,8 @@ export function DashboardClient({
   const exitPresent = useCallback(() => setPresenting(false), []);
 
   const shared = {
-    perpetuos, totals, totalAlunos, diasPreenchidos, meta, diasNoMes,
+    perpetuos, totals, totalAlunos, diasPreenchidos,
+    metaFat, metaSem, lucroSemana, diasNoMes,
     mesAtual, anoAtual, isHead, presenting,
     onOpenSettings: () => setShowSettings(true),
     onPresent: () => setPresenting(true),
@@ -44,8 +49,9 @@ export function DashboardClient({
         <SettingsModal
           open={showSettings}
           onClose={() => setShowSettings(false)}
-          currentMeta={meta}
-          onSaved={setMeta}
+          currentMeta={metaFat}
+          currentMetaSemanal={metaSem}
+          onSaved={(f, l) => { setMetaFat(f); setMetaSem(l); }}
         />
       )}
 
@@ -64,5 +70,5 @@ function computeTotals(perpetuos: PerpetuoDashboard[]) {
     fat += p.faturamento;
   }
   const lucro = fat - inv;
-  return { investimento: inv, faturamento: fat, lucro, margem: safeDivide(lucro * 100, fat) };
+  return { investimento: inv, faturamento: fat, lucro, margem: safeDivide(lucro * 100, inv) };
 }

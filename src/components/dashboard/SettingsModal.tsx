@@ -2,46 +2,60 @@
 
 import { useState, useRef, useEffect } from "react";
 import { X } from "lucide-react";
-import { updateMetaFaturamento } from "@/actions/settings-dashboard";
+import {
+  updateMetaFaturamento,
+  updateMetaLucroSemanal,
+} from "@/actions/settings-dashboard";
 import { toast } from "sonner";
+import { FieldInput } from "./FieldInput";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   currentMeta: number;
-  onSaved: (newMeta: number) => void;
+  currentMetaSemanal: number;
+  onSaved: (metaFat: number, metaLucro: number) => void;
 }
 
-export function SettingsModal({ open, onClose, currentMeta, onSaved }: Props) {
-  const [value, setValue] = useState("");
+export function SettingsModal({
+  open, onClose, currentMeta, currentMetaSemanal, onSaved,
+}: Props) {
+  const [valFat, setValFat] = useState("");
+  const [valLucro, setValLucro] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (open) {
-      setValue(currentMeta > 0 ? String(currentMeta / 100) : "");
+      setValFat(currentMeta > 0 ? String(currentMeta / 100) : "");
+      setValLucro(currentMetaSemanal > 0 ? String(currentMetaSemanal / 100) : "");
       setTimeout(() => inputRef.current?.focus(), 50);
     }
-  }, [open, currentMeta]);
+  }, [open, currentMeta, currentMetaSemanal]);
 
   if (!open) return null;
 
   async function handleSave() {
-    const num = parseFloat(value.replace(",", "."));
-    if (isNaN(num) || num < 0) {
-      toast.error("Informe um valor válido");
+    const numFat = parseFloat(valFat.replace(",", "."));
+    const numLucro = parseFloat(valLucro.replace(",", "."));
+    if (isNaN(numFat) || numFat < 0 || isNaN(numLucro) || numLucro < 0) {
+      toast.error("Informe valores válidos");
       return;
     }
-    const cents = Math.round(num * 100);
+    const centsFat = Math.round(numFat * 100);
+    const centsLucro = Math.round(numLucro * 100);
     setSaving(true);
-    const res = await updateMetaFaturamento(cents);
+    const [r1, r2] = await Promise.all([
+      updateMetaFaturamento(centsFat),
+      updateMetaLucroSemanal(centsLucro),
+    ]);
     setSaving(false);
-    if (res.success) {
-      toast.success("Meta salva");
-      onSaved(cents);
+    if (r1.success && r2.success) {
+      toast.success("Metas salvas");
+      onSaved(centsFat, centsLucro);
       onClose();
     } else {
-      toast.error(res.error ?? "Erro ao salvar");
+      toast.error(r1.error ?? r2.error ?? "Erro ao salvar");
     }
   }
 
@@ -54,86 +68,26 @@ export function SettingsModal({ open, onClose, currentMeta, onSaved }: Props) {
       <div
         className="relative flex flex-col gap-5"
         style={{
-          background: "#fff",
-          borderRadius: 16,
-          padding: "28px 32px",
-          width: 400,
+          background: "#fff", borderRadius: 16,
+          padding: "28px 32px", width: 400,
           boxShadow: "0 16px 50px rgba(0,19,33,0.16)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-navy-50 hover:text-navy-dark"
-        >
+        <button onClick={onClose} className="absolute top-4 right-4 text-navy-50 hover:text-navy-dark">
           <X size={18} strokeWidth={2} />
         </button>
 
-        <h3 className="font-bold" style={{ fontSize: 17, color: "#001321" }}>
-          Configurações
-        </h3>
+        <h3 className="font-bold" style={{ fontSize: 17, color: "#001321" }}>Configurações</h3>
 
-        <div className="flex flex-col gap-1.5">
-          <label
-            className="font-semibold"
-            style={{ fontSize: 12.5, color: "rgba(0,19,33,0.7)" }}
-          >
-            Meta de faturamento (R$)
-          </label>
-          <input
-            ref={inputRef}
-            type="number"
-            step="0.01"
-            min="0"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder="Ex: 500000"
-            className="font-table outline-none"
-            style={{
-              padding: "10px 14px",
-              fontSize: 13.5,
-              border: "1.5px solid #DEE2E6",
-              borderRadius: 8,
-              color: "#001321",
-              transition: "border-color 0.2s, box-shadow 0.2s",
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = "#B19365";
-              e.currentTarget.style.boxShadow = "0 0 0 3px #F5EDE1";
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = "#DEE2E6";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-            onKeyDown={(e) => { if (e.key === "Enter") handleSave(); }}
-          />
-        </div>
+        <FieldInput ref={inputRef} label="Meta de faturamento mensal (R$)" value={valFat} onChange={setValFat} placeholder="Ex: 500000" onEnter={handleSave} />
+        <FieldInput label="Meta de lucro semanal (R$)" value={valLucro} onChange={setValLucro} placeholder="Ex: 50000" onEnter={handleSave} />
 
         <div className="flex justify-end gap-2">
-          <button
-            onClick={onClose}
-            className="font-semibold hover:bg-[rgba(0,19,33,0.05)]"
-            style={{
-              padding: "10px 22px",
-              fontSize: 13.5,
-              borderRadius: 6,
-              color: "#001321",
-            }}
-          >
+          <button onClick={onClose} className="font-semibold hover:bg-[rgba(0,19,33,0.05)]" style={{ padding: "10px 22px", fontSize: 13.5, borderRadius: 6, color: "#001321" }}>
             Cancelar
           </button>
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="font-semibold disabled:opacity-40"
-            style={{
-              padding: "10px 22px",
-              fontSize: 13.5,
-              borderRadius: 6,
-              background: "#001321",
-              color: "#fff",
-            }}
-          >
+          <button onClick={handleSave} disabled={saving} className="font-semibold disabled:opacity-40" style={{ padding: "10px 22px", fontSize: 13.5, borderRadius: 6, background: "#001321", color: "#fff" }}>
             {saving ? "Salvando…" : "Salvar"}
           </button>
         </div>

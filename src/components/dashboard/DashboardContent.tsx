@@ -3,6 +3,7 @@
 import { Settings, Users, Presentation } from "lucide-react";
 import { HalfMoonChart } from "./HalfMoonChart";
 import { KpiGrid } from "./KpiGrid";
+import { WeeklyProgressBar } from "./WeeklyProgressBar";
 import { PerpetuoCard } from "./PerpetuoCard";
 import type { PerpetuoDashboard } from "@/types/dashboard";
 
@@ -16,7 +17,9 @@ interface Props {
   totals: { investimento: number; faturamento: number; lucro: number; margem: number | null };
   totalAlunos: number;
   diasPreenchidos: number;
-  meta: number;
+  metaFat: number;
+  metaSem: number;
+  lucroSemana: number;
   moonSize: number;
   diasNoMes: number;
   mesAtual: number;
@@ -28,7 +31,8 @@ interface Props {
 }
 
 export function DashboardContent({
-  perpetuos, totals, totalAlunos, diasPreenchidos, meta, moonSize,
+  perpetuos, totals, totalAlunos, diasPreenchidos,
+  metaFat, metaSem, lucroSemana, moonSize,
   diasNoMes, mesAtual, anoAtual, isHead, presenting,
   onOpenSettings, onPresent,
 }: Props) {
@@ -58,9 +62,12 @@ export function DashboardContent({
 
       {/* Top row */}
       <div className="flex gap-[14px]">
-        <div className="flex flex-1 items-center gap-6" style={{ background: "#fff", border: "1px solid #ECEDF0", borderRadius: 14, padding: "18px 24px" }}>
-          <HalfMoonChart current={totals.faturamento} target={meta} size={moonSize} />
-          <KpiGrid totals={totals} diasPreenchidos={diasPreenchidos} diasNoMes={diasNoMes} />
+        <div className="flex flex-1 flex-col gap-[14px]">
+          <div className="flex items-center gap-6" style={{ background: "#fff", border: "1px solid #ECEDF0", borderRadius: 14, padding: "18px 24px" }}>
+            <HalfMoonChart current={totals.faturamento} target={metaFat} size={moonSize} />
+            <KpiGrid totals={totals} diasPreenchidos={diasPreenchidos} diasNoMes={diasNoMes} />
+          </div>
+          <WeeklyProgressBar current={lucroSemana} target={metaSem} />
         </div>
         <div className="flex flex-col items-center justify-center" style={{ minWidth: 160, background: "#fff", border: "1px solid #ECEDF0", borderRadius: 14, padding: "24px 20px" }}>
           <span className="uppercase tracking-[1.2px] font-semibold" style={{ fontSize: 9.5, color: "#B19365", marginBottom: 10 }}>ALUNOS NO MÊS</span>

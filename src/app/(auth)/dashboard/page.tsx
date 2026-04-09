@@ -1,16 +1,31 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/actions/auth";
 import { createClient } from "@/lib/supabase/server";
-import { getMetaFaturamento } from "@/actions/settings-dashboard";
 import {
-  calcFatPrincipal, calcTotalFunil, calcVendasPrincipal,
+  getMetaFaturamento,
+  getMetaLucroSemanal,
+} from "@/actions/settings-dashboard";
+import {
+  calcFatPrincipal, calcTotalFunil, calcVendasPrincipal, safeDivide,
 } from "@/lib/utils/calcMetrics";
-import { safeDivide } from "@/lib/utils/calcMetrics";
 import { DashboardClient } from "@/components/dashboard/DashboardClient";
 import type { PerpetuoDashboard } from "@/types/dashboard";
 import type { DailyEntryRow } from "@/types/daily-entry";
 
 export const metadata = { title: "Dashboard — PerpetuoHQ" };
+
+function getWeekRange(now: Date): { start: string; end: string } {
+  const day = now.getDay();
+  const diffToMon = day === 0 ? -6 : 1 - day;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + diffToMon);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  return {
+    start: monday.toISOString().slice(0, 10),
+    end: sunday.toISOString().slice(0, 10),
+  };
+}
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -20,6 +35,7 @@ export default async function DashboardPage() {
   const mesAtual = now.getMonth() + 1;
   const anoAtual = now.getFullYear();
   const diasNoMes = new Date(anoAtual, mesAtual, 0).getDate();
+  const week = getWeekRange(now);
 
   const supabase = createClient();
 
@@ -29,8 +45,8 @@ export default async function DashboardPage() {
     .order("name");
 
   const perpetuosList = perpetuosRaw ?? [];
-
   const perpetuos: PerpetuoDashboard[] = [];
+  let lucroSemana = 0;
 
   for (const p of perpetuosList) {
     const { data: planilha } = await supabase
@@ -43,14 +59,9 @@ export default async function DashboardPage() {
 
     if (!planilha) {
       perpetuos.push({
-        id: p.id,
-        name: p.name,
-        investimento: 0,
-        faturamento: 0,
-        lucro: 0,
-        margem: null,
-        vendas: 0,
-        diasPreenchidos: 0,
+        id: p.id, name: p.name,
+        investimento: 0, faturamento: 0, lucro: 0,
+        margem: null, vendas: 0, diasPreenchidos: 0,
       });
       continue;
     }
@@ -76,28 +87,32 @@ export default async function DashboardPage() {
       inv += e.investimento;
       fat += fatTotal;
       vendas += vp;
+
+      if (e.data >= week.start && e.data <= week.end) {
+        lucroSemana += fatTotal - e.investimento;
+      }
     }
 
     const lucro = fat - inv;
     perpetuos.push({
-      id: p.id,
-      name: p.name,
-      investimento: inv,
-      faturamento: fat,
-      lucro,
-      margem: safeDivide(lucro * 100, fat),
-      vendas,
-      diasPreenchidos: dias,
+      id: p.id, name: p.name,
+      investimento: inv, faturamento: fat, lucro,
+      margem: safeDivide(lucro * 100, inv),
+      vendas, diasPreenchidos: dias,
     });
   }
 
-  const metaRes = await getMetaFaturamento();
-  const metaFaturamento = metaRes.data ?? 0;
+  const [metaRes, metaSemRes] = await Promise.all([
+    getMetaFaturamento(),
+    getMetaLucroSemanal(),
+  ]);
 
   return (
     <DashboardClient
       perpetuos={perpetuos}
-      metaFaturamento={metaFaturamento}
+      metaFaturamento={metaRes.data ?? 0}
+      metaLucroSemanal={metaSemRes.data ?? 0}
+      lucroSemana={lucroSemana}
       diasNoMes={diasNoMes}
       mesAtual={mesAtual}
       anoAtual={anoAtual}
