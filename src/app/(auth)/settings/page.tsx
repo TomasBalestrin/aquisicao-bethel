@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/actions/auth";
 import { SettingsForm } from "@/components/SettingsForm";
+import { ApiKeysSection } from "@/components/settings/ApiKeysSection";
 
 export const metadata = {
   title: "Configurações — PerpetuoHQ",
@@ -17,6 +18,11 @@ export default async function SettingsPage() {
         Configurações
       </h1>
       <SettingsForm name={user.name} email={user.email} avatarUrl={user.avatar_url} />
+      {user.role === "head" && (
+        <div className="border-t border-gray-200 pt-6">
+          <ApiKeysSection />
+        </div>
+      )}
     </div>
   );
 }
