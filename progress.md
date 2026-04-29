@@ -132,3 +132,36 @@ FEITO:
 - [x] Coluna "Dia" sticky à esquerda durante scroll horizontal
 - [x] Header da tabela sticky no topo durante scroll vertical
 - [x] Fix upload avatar: try/catch/finally para loading nunca ficar preso
+
+---
+
+## API Externa (Abril 2026)
+
+FEITO:
+- [x] A1: Reorganização do repositório — `/docs` (PRD, auditoria, design-system.html) e `/migrations` (SQLs) movidos via `git mv`
+- [x] B1: Types da API em `src/types/api.ts` — `ApiKeyRow`, `ApiKeyPublic`, `GenerateApiKeyResult`, `PerpetuoListItem`, `PlanilhaListItem`, `PlanilhaTotais`
+- [x] B2: SQL da migration `api_keys` salvo em `migrations/create-api-keys.sql` (execução manual no Supabase Dashboard)
+- [x] B3: Helpers `apiSuccess`/`apiError` em `src/lib/api/response.ts` (NextResponse, shape `{ data, count? }` / `{ error, message }`)
+- [x] B4: Middleware `validateApiKey` em `src/lib/api/auth.ts` — Bearer + SHA-256 + lookup em `api_keys` + fire-and-forget `last_used_at`
+- [x] C1: `GET /api/v1/perpetuos` — lista com `planilhas_count` (count exact + head)
+- [x] C2: `GET /api/v1/perpetuos/[id]` — detalhe + planilhas (id, mes, ano, nomes de OBs/upsell/downsell/plataformas)
+- [x] D1: `GET /api/v1/perpetuos/[id]/planilhas` — lista com `dias_preenchidos` (filtro `investimento>0 OR plat1_faturado>0`) e `dias_total` derivado de `new Date(ano, mes, 0)`
+- [x] D2: `GET /api/v1/perpetuos/[id]/planilhas/[planilhaId]` — entries (filtros `?de`/`?ate`) + totais agregados via `calcMetrics`
+- [x] E1: Server Actions `generateApiKey`, `revokeApiKey`, `listApiKeys` em `src/actions/apiKeys.ts` (Zod, role head, `revalidatePath("/settings")`)
+- [x] F1: UI em `src/components/settings/` — `ApiKeysSection`, `ApiKeyCard`, `ApiKeyReveal`. Settings page renderiza atrás de `border-t` quando role === "head"
+
+DECISÕES TÉCNICAS:
+- Tabela `api_keys` ainda não está em `src/types/database.ts` — extension type local + cast `as unknown as SupabaseClient<...>` em `auth.ts` (lib/api) e `apiKeys.ts` (actions). Mantém strict, sem `any`. Vale subir para `database.ts` quando outras rotas precisarem.
+- Chave API: `phq_` + 16 bytes hex (`randomBytes(16).toString("hex")` → 32 chars hex). `key_prefix = key.slice(0, 8)`. Apenas o SHA-256 fica no banco.
+- Revogação não deleta a row — soft delete via `is_active = false`.
+- Margem em `PlanilhaTotais`: `(lucro / investimento) * 100` arredondada a 2 casas (divergente do `schema.md`, que usa `faturamento_total` como denominador — seguir contrato da API).
+- N+1 em `/perpetuos` (count de planilhas) e `/perpetuos/[id]/planilhas` (count de entries) — suficiente para escala atual; otimizar quando incomodar.
+
+PENDENTE / VERIFICAÇÃO MANUAL:
+- [ ] Executar `migrations/create-api-keys.sql` no Supabase Dashboard (CREATE TABLE + 2 índices + RLS + 3 policies)
+- [ ] G1: Teste end-to-end ainda não realizado neste sandbox por falta de credenciais Supabase reais. Verificado:
+  - ✅ Step 2 — `curl /api/v1/perpetuos` sem header → 401 com shape `{error, message}`
+  - ✅ Step 3 — `Bearer fake_key` → 401
+  - ✅ Header sem prefixo `Bearer ` → 401
+  - ✅ UUID inexistente com key inválida → 401 (auth precede DB)
+  - ⏳ Steps 1, 4–11 (key real, dados reais, `last_used_at`, fluxo de revogação) — testar localmente após criar a tabela e gerar uma key pela UI
